@@ -22,10 +22,10 @@ impl  ScreenMesh  {
     pub fn build(display: &Display<WindowSurface>) -> ScreenMesh  {
 
         let shape = vec![
-            Vertex { position: [ 0.5, 0.5] },
-            Vertex { position: [ 0.5,-0.5] },
-            Vertex { position: [-0.5,-0.5] },
-            Vertex { position: [-0.5, 0.5] }
+            Vertex { position: [ 1.0, 1.0] },
+            Vertex { position: [ 1.0,-1.0] },
+            Vertex { position: [-1.0,-1.0] },
+            Vertex { position: [-1.0, 1.0] }
         ];
 
         ScreenMesh {
