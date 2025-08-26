@@ -1,7 +1,5 @@
 #![allow(non_snake_case)]
 
-use crate::shader::Shader;
-
 use glium::Surface;
 
 use glium::backend::glutin::Display;
@@ -19,8 +17,7 @@ pub struct SimpleFrame {
     pub clrRed: f32,
     pub clrBlue: f32,
     pub clrGreen: f32,
-    pub clrAlpha: f32,
-
+    pub clrAlpha: f32
 }
 
 impl SimpleFrame {

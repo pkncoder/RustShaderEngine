@@ -1,5 +1,8 @@
 #![allow(non_snake_case)]
 
+mod screenMesh;
+use screenMesh::ScreenMesh;
+
 mod frames;
 use frames::SimpleFrame;
 
@@ -10,33 +13,17 @@ use shader::Shader;
 extern crate glium;
 
 fn main() {
-    // We start by creating the EventLoop, this can only be done once per process.
-    // This also needs to happen on the main thread to make the program portable.
+    
     let event_loop = glium::winit::event_loop::EventLoop::builder()
         .build()
         .expect("event loop building");
     let (_window, display) = glium::backend::glutin::SimpleWindowBuilder::new()
-        .with_title("Glium tutorial #1")
+        .with_title("Rust Shader Engine")
         .build(&event_loop);
 
 
-    #[derive(Copy, Clone)]
-    struct Vertex {
-        position: [f32; 2],
-    }
-    implement_vertex!(Vertex, position);
-    let shape = vec![
-        Vertex { position: [ 0.5, 0.5] },
-        Vertex { position: [ 0.5,-0.5] },
-        Vertex { position: [-0.5,-0.5] },
-        Vertex { position: [-0.5, 0.5] }
-    ];
-    let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
-    let indices = glium::index::NoIndices(glium::index::PrimitiveType::TriangleFan);
-
-
+    let screenMesh = ScreenMesh::build(&display);
     let Shader = Shader::build(&display, "shaders/vertex.vert", "shaders/fragment.frag");
-
 
     let mut frame = SimpleFrame::build();
     frame.setClearColor(1.0, 0.4, 0.8, 1.0);
@@ -53,8 +40,8 @@ fn main() {
                 glium::winit::event::WindowEvent::RedrawRequested => {
                     frame.draw(
                         &display,
-                        &vertex_buffer, 
-                        &indices, 
+                        &screenMesh.vertexBuffer, 
+                        &screenMesh.indices, 
                         &Shader.program, 
                         &glium::uniforms::EmptyUniforms, 
                         &Default::default()
