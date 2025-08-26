@@ -22,10 +22,11 @@ fn main() {
         .build(&event_loop);
 
     let screenMesh = ScreenMesh::build(&display);
-    let Shader = Shader::build(&display, "shaders/vertex.vert", "shaders/fragment.frag");
+    let shader = Shader::build(&display, "shaders/vertex.vert", "shaders/fragment.frag");
 
     let mut frame = SimpleFrame::build();
     frame.setClearColor(1.0, 0.4, 0.8, 1.0);
+    frame.linkShader(shader);
         
     #[allow(deprecated)]
     event_loop.run(move |event, window_target| {
@@ -35,12 +36,11 @@ fn main() {
                     window_target.exit();
                 },
                 glium::winit::event::WindowEvent::RedrawRequested => {
-                    frame.draw(
+                    frame.linkedDraw(
                         &display,
-                        &screenMesh.vertexBuffer, 
-                        &screenMesh.indices, 
-                        &Shader.program, 
-                        &glium::uniforms::EmptyUniforms, 
+                        &screenMesh.vertexBuffer,
+                        &screenMesh.indices,
+                        &glium::uniforms::EmptyUniforms,
                         &Default::default()
                     );
                 },

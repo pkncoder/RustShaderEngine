@@ -1,5 +1,7 @@
 #![allow(non_snake_case)]
 
+use crate::shader::Shader;
+
 use glium::Surface;
 
 use glium::backend::glutin::Display;
@@ -17,7 +19,9 @@ pub struct SimpleFrame {
     pub clrRed: f32,
     pub clrBlue: f32,
     pub clrGreen: f32,
-    pub clrAlpha: f32
+    pub clrAlpha: f32,
+
+    pub linkedShader: Option<Shader>
 }
 
 impl SimpleFrame {
@@ -27,7 +31,9 @@ impl SimpleFrame {
             clrRed: 0.0,
             clrGreen: 0.0,
             clrBlue: 0.0,
-            clrAlpha: 0.0
+            clrAlpha: 0.0,
+
+            linkedShader: None
         }
     }
 
@@ -38,6 +44,11 @@ impl SimpleFrame {
         self.clrAlpha = alpha;
     }
 
+    pub fn linkShader(&mut self, shader: Shader) {
+        self.linkedShader = Some(shader);
+    }
+
+    #[allow(dead_code)]
     pub fn draw<
         'a,
         'b,
@@ -56,6 +67,28 @@ impl SimpleFrame {
         let mut target = display.draw();
         target.clear_color(self.clrRed, self.clrGreen, self.clrBlue, self.clrAlpha);
         target.draw(vertexBuffer, indexBuffer, program, uniforms, drawParams).unwrap();
+
+        target.finish().unwrap();
+    }
+
+    pub fn linkedDraw<
+        'a,
+        'b,
+        V: MultiVerticesSource<'a>, 
+        I: Into<IndicesSource<'b>>,
+        U: Uniforms
+    >(
+        &mut self,
+        display: &Display<WindowSurface>,
+        vertexBuffer: V,
+        indexBuffer: I,
+        uniforms: &U, 
+        drawParams: &DrawParameters<'_>
+    ) {
+        let mut target = display.draw();
+        target.clear_color(self.clrRed, self.clrGreen, self.clrBlue, self.clrAlpha);
+
+        target.draw(vertexBuffer, indexBuffer, &self.linkedShader.as_ref().expect("Shader needs to be linked first.").program, uniforms, drawParams).unwrap();
 
         target.finish().unwrap();
     }
