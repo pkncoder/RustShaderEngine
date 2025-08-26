@@ -4,5 +4,5 @@ in vec2 fragPosition;
 out vec4 color;
 
 void main() {
-    color = vec4(fragPosition.xy * 2.0, 0.0, 1.0);
+    color = vec4(fragPosition.xy, 0.0, 1.0);
 }
