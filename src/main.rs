@@ -26,8 +26,9 @@ fn main() {
 
     let mut frame = SimpleFrame::build();
     frame.setClearColor(1.0, 0.4, 0.8, 1.0);
+    frame.linkMesh(screenMesh);
     frame.linkShader(shader);
-        
+
     #[allow(deprecated)]
     event_loop.run(move |event, window_target| {
         match event {
@@ -38,8 +39,6 @@ fn main() {
                 glium::winit::event::WindowEvent::RedrawRequested => {
                     frame.linkedDraw(
                         &display,
-                        &screenMesh.vertexBuffer,
-                        &screenMesh.indices,
                         &glium::uniforms::EmptyUniforms,
                         &Default::default()
                     );
