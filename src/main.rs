@@ -1,16 +1,16 @@
 #![allow(non_snake_case)]
 
+#[macro_use]
+extern crate glium;
+
 mod screenMesh;
 use screenMesh::ScreenMesh;
-
-mod frames;
-use frames::SimpleFrame;
 
 mod shader;
 use shader::Shader;
 
-#[macro_use]
-extern crate glium;
+mod frames;
+use frames::SimpleFrame;
 
 fn main() {
     
@@ -21,19 +21,16 @@ fn main() {
         .with_title("Rust Shader Engine")
         .build(&event_loop);
 
-
     let screenMesh = ScreenMesh::build(&display);
     let Shader = Shader::build(&display, "shaders/vertex.vert", "shaders/fragment.frag");
 
     let mut frame = SimpleFrame::build();
     frame.setClearColor(1.0, 0.4, 0.8, 1.0);
         
-    // Now we wait until the program is closed
     #[allow(deprecated)]
     event_loop.run(move |event, window_target| {
         match event {
             glium::winit::event::Event::WindowEvent { event, .. } => match event {
-                // This event is sent by the OS when you close the Window, or request the program to quit via the taskbar.
                 glium::winit::event::WindowEvent::CloseRequested => {
                     window_target.exit();
                 },
