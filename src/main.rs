@@ -12,6 +12,9 @@ use shader::Shader;
 mod frames;
 use frames::SimpleFrame;
 
+mod uniforms;
+use uniforms::getUniforms;
+
 fn main() {
     
     let event_loop = glium::winit::event_loop::EventLoop::builder()
@@ -29,6 +32,8 @@ fn main() {
     frame.linkMesh(screenMesh);
     frame.linkShader(shader);
 
+    let mut uniforms = getUniforms(&display);
+
     #[allow(deprecated)]
     event_loop.run(move |event, window_target| {
         match event {
@@ -38,12 +43,6 @@ fn main() {
                 },
                 glium::winit::event::WindowEvent::RedrawRequested => {
 
-                    let (width, height) = display.get_framebuffer_dimensions();
-
-                    let uniforms = uniform! {
-                        iResolution: (width as f32, height as f32)
-                    };
-
                     frame.linkedDraw(
                         &display,
                         &uniforms,
@@ -52,6 +51,8 @@ fn main() {
                 },
                 glium::winit::event::WindowEvent::Resized(window_size) => {
                     display.resize(window_size.into());
+
+                    uniforms = getUniforms(&display);
                 },
                 _ => (),
             },

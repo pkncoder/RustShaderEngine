@@ -18,8 +18,8 @@ pub struct ScreenMesh {
     pub indices: NoIndices
 }
 
-impl  ScreenMesh  {
-    pub fn build(display: &Display<WindowSurface>) -> ScreenMesh  {
+impl ScreenMesh  {
+    pub fn build(display: &Display<WindowSurface>) -> ScreenMesh {
 
         let shape = vec![
             Vertex { position: [ 1.0, 1.0] },
