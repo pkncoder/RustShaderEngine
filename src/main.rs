@@ -22,7 +22,7 @@ fn main() {
         .build(&event_loop);
 
     let screenMesh = ScreenMesh::build(&display);
-    let shader = Shader::build(&display, "shaders/vertex.vert", "shaders/fragment.frag");
+    let shader = Shader::build(&display, "shaders/vertex.vert", "shaders/fragment.frag", Some("./shaders/includes"));
 
     let mut frame = SimpleFrame::build();
     frame.setClearColor(1.0, 0.4, 0.8, 1.0);
@@ -37,9 +37,16 @@ fn main() {
                     window_target.exit();
                 },
                 glium::winit::event::WindowEvent::RedrawRequested => {
+
+                    let (width, height) = display.get_framebuffer_dimensions();
+
+                    let uniforms = uniform! {
+                        iResolution: (width as f32, height as f32)
+                    };
+
                     frame.linkedDraw(
                         &display,
-                        &glium::uniforms::EmptyUniforms,
+                        &uniforms,
                         &Default::default()
                     );
                 },

@@ -1,4 +1,5 @@
-#version 140
+#version 330 core
+
 in vec2 position;
 out vec2 fragPosition;
 
