@@ -1,7 +1,7 @@
 HitInfo raySphere(Ray ray, Sphere sphere) {
 
     HitInfo hit;
-    hit.hit = false;
+    hit.hit = NO_HIT;
     hit.dist = 9999999999.0;
 
     vec3 oc = ray.origin - sphere.origin;
@@ -20,10 +20,11 @@ HitInfo raySphere(Ray ray, Sphere sphere) {
         }
 
         if (t > EPSILON) {
-            hit.hit = true;
+            hit.hit = HIT;
             hit.dist = t;
             hit.hitPos = ray.origin + ray.direction * t;
             hit.normal = normalize(hit.hitPos - sphere.origin);
+            hit.material = sphere.material;
         }
     }
 

@@ -1,4 +1,5 @@
 #![allow(non_snake_case)]
+#![allow(unused_assignments)]
 
 #[macro_use]
 extern crate glium;
@@ -65,7 +66,8 @@ fn main() {
         } => {
 
             let ui = imgui_context.frame();
-            ui.show_demo_window(&mut true);
+
+            // ui.show_demo_window(&mut true);
             ui.window("Render Editor")
                 .size([200.0, 100.0], imgui::Condition::FirstUseEver)
                 .build(|| {
@@ -74,7 +76,7 @@ fn main() {
                 });
             uniformBuffer = getUniforms(&display, &uniforms);
 
-            frame.draw(
+             frame.draw(
                 &display,
                 &uniformBuffer,
                 &Default::default(),

@@ -3,16 +3,21 @@ struct Ray {
     vec3 direction;
 };
 
-struct Sphere {
-    vec3 origin;
-    float radius;
+struct Material {
     vec3 color;
 };
 
+struct Sphere {
+    vec3 origin;
+    float radius;
+    Material material;    
+};
+
 struct HitInfo {
-  bool hit;
-  float dist;
-  vec3 hitPos;
-  vec3 normal;
+    int hit;
+    float dist;
+    vec3 hitPos;
+    vec3 normal;
+    Material material;
 };
 
