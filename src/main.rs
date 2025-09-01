@@ -3,6 +3,12 @@
 #[macro_use]
 extern crate glium;
 
+use glium::backend::{
+    winit,
+    winit::event::{Event, WindowEvent},
+    winit::window::Window
+};
+
 mod screenMesh;
 use screenMesh::ScreenMesh;
 
@@ -10,7 +16,7 @@ mod shader;
 use shader::Shader;
 
 mod frames;
-use frames::SimpleFrame;
+use frames::{SimpleFrame, imgui_init};
 
 mod uniforms;
 use uniforms::getUniforms;
@@ -20,9 +26,13 @@ fn main() {
     let event_loop = glium::winit::event_loop::EventLoop::builder()
         .build()
         .expect("event loop building");
-    let (_window, display) = glium::backend::glutin::SimpleWindowBuilder::new()
+    let (window, display) = glium::backend::glutin::SimpleWindowBuilder::new()
         .with_title("Rust Shader Engine")
         .build(&event_loop);
+
+    let (mut winit_platform, mut imgui_context) = imgui_init(&window);
+    let mut renderer = imgui_glium_renderer::Renderer::new(&mut imgui_context, &display)
+        .expect("Failed to initialize renderer");
 
     let screenMesh = ScreenMesh::build(&display);
     let shader = Shader::build(&display, "shaders/vertex.vert", "shaders/fragment.frag", Some("./shaders/includes"));
@@ -32,32 +42,66 @@ fn main() {
     frame.linkMesh(screenMesh);
     frame.linkShader(shader);
 
+    let mut last_frame = std::time::Instant::now();
     let mut uniforms = getUniforms(&display);
 
     #[allow(deprecated)]
-    event_loop.run(move |event, window_target| {
-        match event {
-            glium::winit::event::Event::WindowEvent { event, .. } => match event {
-                glium::winit::event::WindowEvent::CloseRequested => {
-                    window_target.exit();
-                },
-                glium::winit::event::WindowEvent::RedrawRequested => {
+    event_loop.run(move |event, window_target| match event {
+        Event::NewEvents(_) => {
+            let now = std::time::Instant::now();
+            imgui_context.io_mut().update_delta_time(now - last_frame);
+            last_frame = now;
+        }
+        Event::AboutToWait => {
+            winit_platform
+                .prepare_frame(imgui_context.io_mut(), &window)
+                .expect("Failed to prepare frame");
+            window.request_redraw();
+        }
+        Event::WindowEvent {
+            event: WindowEvent::RedrawRequested,
+            ..
+        } => {
 
-                    frame.linkedDraw(
-                        &display,
-                        &uniforms,
-                        &Default::default()
-                    );
-                },
-                glium::winit::event::WindowEvent::Resized(window_size) => {
-                    display.resize(window_size.into());
+            let ui = imgui_context.frame();
+            ui.show_demo_window(&mut true);
 
-                    uniforms = getUniforms(&display);
-                },
-                _ => (),
-            },
-            _ => (),
-        };
+            frame.draw(
+                &display,
+                &uniforms,
+                &Default::default(),
+                &window,
+                &ui,
+                &mut winit_platform,
+            );
+
+            frame.renderImgui(&mut imgui_context, &mut renderer);
+
+            frame.finish();
+        }
+        Event::WindowEvent {
+            event: WindowEvent::CloseRequested,
+            ..
+        } => window_target.exit(),
+        winit::event::Event::WindowEvent {
+            event: winit::event::WindowEvent::Resized(new_size),
+            ..
+        } => {
+            if new_size.width > 0 && new_size.height > 0 {
+                display.resize((new_size.width, new_size.height));
+            }
+            uniforms = getUniforms(&display);
+            winit_platform.handle_event(imgui_context.io_mut(), &window, &event);
+        }
+        event => {
+            winit_platform.handle_event(imgui_context.io_mut(), &window, &event);
+        }
     })
-    .unwrap();
+    .expect("EventLoop error");
+
 }
+
+
+
+
+
