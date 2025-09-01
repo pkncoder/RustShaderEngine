@@ -19,7 +19,7 @@ mod frames;
 use frames::{SimpleFrame, imgui_init};
 
 mod uniforms;
-use uniforms::getUniforms;
+use uniforms::{getUniforms, UniformStruct};
 
 fn main() {
     
@@ -43,7 +43,8 @@ fn main() {
     frame.linkShader(shader);
 
     let mut last_frame = std::time::Instant::now();
-    let mut uniforms = getUniforms(&display);
+    let mut uniforms = UniformStruct::build();
+    let mut uniformBuffer = getUniforms(&display, &uniforms);
 
     #[allow(deprecated)]
     event_loop.run(move |event, window_target| match event {
@@ -65,10 +66,17 @@ fn main() {
 
             let ui = imgui_context.frame();
             ui.show_demo_window(&mut true);
+            ui.window("Render Editor")
+                .size([200.0, 100.0], imgui::Condition::FirstUseEver)
+                .build(|| {
+                    ui.color_edit3("Ambient Color", &mut uniforms.ambientColor);
+                    ui.slider("Ambient Amount", 0.0, 1.0, &mut uniforms.ambientPower);
+                });
+            uniformBuffer = getUniforms(&display, &uniforms);
 
             frame.draw(
                 &display,
-                &uniforms,
+                &uniformBuffer,
                 &Default::default(),
                 &window,
                 &ui,
@@ -90,7 +98,7 @@ fn main() {
             if new_size.width > 0 && new_size.height > 0 {
                 display.resize((new_size.width, new_size.height));
             }
-            uniforms = getUniforms(&display);
+            uniformBuffer = getUniforms(&display, &uniforms);
             winit_platform.handle_event(imgui_context.io_mut(), &window, &event);
         }
         event => {

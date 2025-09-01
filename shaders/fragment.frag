@@ -8,7 +8,11 @@ uniform vec4 ambient;
 
 #include <structs.glsl>
 #include <defines.glsl>
+
 #include <interceptions.glsl>
+
+#include <srgb.glsl>
+#include <toneMapping.glsl>
 
 vec3 getSkyColor(Ray ray) {
     return mix(vec3(0.8, 0.4, 0.0), vec3(0.1, 0.4, 0.5), sin(dot(vec3(0.0, 1.0, 0.0), ray.direction) + 0.5));
@@ -42,12 +46,13 @@ void main() {
     vec3 reflectedDir = reflect(-lightDir, hit.normal);
     vec3 specular = pow(max(dot(normalize(ray.origin - hit.hitPos), reflectedDir), 0.0), 32.0) * lightColor * 1.0;
 
-    vec3 color = getSkyColor(ray);
+    vec3 col = getSkyColor(ray);
 
     if (hit.hit) {
-      color = (diffuse + specular + ambient);
-
+      col = (diffuse + specular + ambient);
     }
+
+    vec3 color = LinearToSRGB(ACESFilm(col));
 
     fragColor = vec4(color, 1.0);
 }
