@@ -1,12 +1,17 @@
 #version 330 core
 
+#extension GL_ARB_shader_subroutine : require
+
 in vec2 fragPosition;
 out vec4 fragColor;
 
 uniform vec2 iResolution;
 uniform vec4 ambient;
 
+
+
 #include <structs.glsl>
+#include <subroutines.glsl>
 #include <defines.glsl>
 
 #include <interceptions.glsl>
@@ -16,7 +21,7 @@ uniform vec4 ambient;
 #include <sky.glsl>
 
 #include <phong.glsl>
-#include <simpleShading.glsl>
+#include <lambertion.glsl>
 
 #include <coloring.glsl>
 

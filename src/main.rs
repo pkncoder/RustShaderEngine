@@ -10,6 +10,8 @@ use glium::backend::{
     winit::window::Window
 };
 
+use capitalize::Capitalize;
+
 mod screenMesh;
 use screenMesh::ScreenMesh;
 
@@ -67,12 +69,15 @@ fn main() {
 
             let ui = imgui_context.frame();
 
-            // ui.show_demo_window(&mut true);
+            ui.show_demo_window(&mut true);
             ui.window("Render Editor")
                 .size([200.0, 100.0], imgui::Condition::FirstUseEver)
                 .build(|| {
                     ui.color_edit3("Ambient Color", &mut uniforms.ambientColor);
                     ui.slider("Ambient Amount", 0.0, 1.0, &mut uniforms.ambientPower);
+                    ui.combo("Shading Model", &mut uniforms.shadingModel, &UniformStruct::SHADING_MODELS, |model| {
+                        model.capitalize().into()
+                    });
                 });
             uniformBuffer = getUniforms(&display, &uniforms);
 

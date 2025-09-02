@@ -9,7 +9,7 @@ vec3 color(Ray ray, HitInfo hit) {
     }
 
     else if (hit.hit == HIT) {
-      return phong(ray, hit);
+      return modelColoring(ray, hit);
     }
     
     return vec3(1.0, 0.0, 1.0);

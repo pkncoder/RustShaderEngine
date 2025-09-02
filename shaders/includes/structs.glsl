@@ -20,4 +20,3 @@ struct HitInfo {
     vec3 normal;
     Material material;
 };
-
