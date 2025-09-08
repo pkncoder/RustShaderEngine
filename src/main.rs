@@ -15,6 +15,8 @@ use capitalize::Capitalize;
 mod screenMesh;
 use screenMesh::ScreenMesh;
 
+mod structs;
+
 mod shader;
 use shader::Shader;
 
@@ -23,6 +25,9 @@ use frames::{SimpleFrame, imgui_init};
 
 mod uniforms;
 use uniforms::{getUniforms, UniformStruct};
+
+mod buffers;
+use buffers::getBuffers;
 
 fn main() {
     
@@ -34,6 +39,9 @@ fn main() {
         .build(&event_loop);
 
     let (mut winit_platform, mut imgui_context) = imgui_init(&window);
+
+    // imgui_context.io_mut().config_flags |= imgui::ConfigFlags::DOCKING_ENABLE;
+
     let mut renderer = imgui_glium_renderer::Renderer::new(&mut imgui_context, &display)
         .expect("Failed to initialize renderer");
 
@@ -47,7 +55,6 @@ fn main() {
 
     let mut last_frame = std::time::Instant::now();
     let mut uniforms = UniformStruct::build();
-    let mut uniformBuffer = getUniforms(&display, &uniforms);
 
     #[allow(deprecated)]
     event_loop.run(move |event, window_target| match event {
@@ -69,21 +76,27 @@ fn main() {
 
             let ui = imgui_context.frame();
 
-            ui.show_demo_window(&mut true);
+            // ui.show_demo_window(&mut true);
             ui.window("Render Editor")
                 .size([200.0, 100.0], imgui::Condition::FirstUseEver)
                 .build(|| {
+                    ui.color_edit4("Sphere Color", &mut uniforms.sphere.origin);
                     ui.color_edit3("Ambient Color", &mut uniforms.ambientColor);
                     ui.slider("Ambient Amount", 0.0, 1.0, &mut uniforms.ambientPower);
                     ui.combo("Shading Model", &mut uniforms.shadingModel, &UniformStruct::SHADING_MODELS, |model| {
                         model.capitalize().into()
                     });
                 });
-            uniformBuffer = getUniforms(&display, &uniforms);
+
+            
+            let uniformBuffer = getUniforms(&display, &uniforms);
+            let buffersBuffer = getBuffers(&display, &uniforms); 
+
+            let newUniformBuffer = append_uniforms!(uniformBuffer, buffersBuffer);
 
              frame.draw(
                 &display,
-                &uniformBuffer,
+                &newUniformBuffer,
                 &Default::default(),
                 &window,
                 &ui,
@@ -105,7 +118,6 @@ fn main() {
             if new_size.width > 0 && new_size.height > 0 {
                 display.resize((new_size.width, new_size.height));
             }
-            uniformBuffer = getUniforms(&display, &uniforms);
             winit_platform.handle_event(imgui_context.io_mut(), &window, &event);
         }
         event => {

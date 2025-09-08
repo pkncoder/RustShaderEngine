@@ -8,11 +8,19 @@ out vec4 fragColor;
 uniform vec2 iResolution;
 uniform vec4 ambient;
 
-
-
 #include <structs.glsl>
 #include <subroutines.glsl>
 #include <defines.glsl>
+
+struct SphereX {
+    vec4 origin;
+    vec4 data;
+};
+
+layout(std140) uniform SphereBlock {
+  SphereX spheres[10];
+  float spheresLength;
+};
 
 #include <interceptions.glsl>
 
@@ -37,10 +45,10 @@ void main() {
     );
 
     Sphere sphere = Sphere(
-        vec3(0.0, 0.0, 5.0),
-        1.0,
+        spheres[0].origin.xyz,
+        spheres[0].origin.w,
         Material(
-            vec3(1.0, 0.0, 0.0)
+          vec3(1.0, 0.0, 0.0) 
         )
     );
 

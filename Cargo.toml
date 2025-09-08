@@ -6,9 +6,10 @@ edition = "2021"
 [dependencies]
 glsl-include = "0.3.1"
 glutin = "*"
+glium = "0.35.0"
+
 imgui-glium-renderer = "0.13.0"
 
-glium = "0.35.0"
 imgui-winit-support = "0.13.0"
-imgui = "*"
+imgui = { version = "0.12.0", features = ["docking"] }
 capitalize = "0.3.4"

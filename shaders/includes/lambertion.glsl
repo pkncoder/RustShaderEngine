@@ -4,8 +4,8 @@ subroutine(shade) vec3 lambertion(Ray ray, HitInfo hit) {
 
     vec3 lightDir = normalize(lightPos - hit.hitPos);
 
-    vec3 ambient = ambient.xyz * ambient.w * lightColor * hit.material.color;
-    vec3 diffuse = max(dot(hit.normal, lightDir), 0.0) * lightColor * hit.material.color;
+    vec3 ambient = ambient.xyz * ambient.w * lightColor * hit.material.color.xyz;
+    vec3 diffuse = max(dot(hit.normal, lightDir), 0.0) * lightColor * hit.material.color.xyz;
 
     return (ambient + diffuse);
 }
