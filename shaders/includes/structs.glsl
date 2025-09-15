@@ -4,13 +4,12 @@ struct Ray {
 };
 
 struct Material {
-    vec3 color;
+    vec4 color;
 };
 
 struct Sphere {
-    vec3 origin;
-    float radius;
-    Material material;    
+    vec4 origin;
+    vec4 data;
 };
 
 struct HitInfo {

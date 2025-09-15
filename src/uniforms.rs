@@ -5,10 +5,7 @@ use glium::backend::glutin::glutin::surface::WindowSurface;
 
 use glium::program::ShaderStage;
 
-use crate::structs::{Sphere};
-
 pub struct UniformStruct {
-    pub sphere: Sphere,
     pub ambientColor: [f32; 3],
     pub ambientPower: f32,
     pub shadingModel: usize
@@ -17,10 +14,6 @@ pub struct UniformStruct {
 impl UniformStruct {
     pub fn build() -> UniformStruct {
         UniformStruct {
-            sphere: Sphere {
-                origin: [0.0, 0.0, 5.0, 1.0],
-                data: [0.0, 0.0, 0.0, 0.0]
-            },
             ambientColor: [1.0, 1.0, 1.0],
             ambientPower: 0.2,
             shadingModel: 0 as usize

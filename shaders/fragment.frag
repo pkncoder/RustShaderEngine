@@ -12,14 +12,14 @@ uniform vec4 ambient;
 #include <subroutines.glsl>
 #include <defines.glsl>
 
-struct SphereX {
-    vec4 origin;
-    vec4 data;
+layout(std140) uniform SphereBlock {
+  Sphere spheres[10];
+  float spheresLength;
 };
 
-layout(std140) uniform SphereBlock {
-  SphereX spheres[10];
-  float spheresLength;
+layout(std140) uniform MaterialBlock {
+  Material materials[10];
+  float materialsLength;
 };
 
 #include <interceptions.glsl>
@@ -44,15 +44,7 @@ void main() {
         normalize(vec3(uv, 1.0))
     );
 
-    Sphere sphere = Sphere(
-        spheres[0].origin.xyz,
-        spheres[0].origin.w,
-        Material(
-          vec3(1.0, 0.0, 0.0) 
-        )
-    );
-
-    HitInfo hit = rayTrace(ray, sphere);
+    HitInfo hit = rayTrace(ray);
 
     vec3 col = color(ray, hit); 
 

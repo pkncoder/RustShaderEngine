@@ -1,3 +1,3 @@
-HitInfo rayTrace(Ray ray, Sphere sphere) {
-    return raySphere(ray, sphere);
+HitInfo rayTrace(Ray ray) {
+    return rayScene(ray);
 }

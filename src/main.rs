@@ -27,7 +27,7 @@ mod uniforms;
 use uniforms::{getUniforms, UniformStruct};
 
 mod buffers;
-use buffers::getBuffers;
+use buffers::{getBuffers, Buffers};
 
 fn main() {
     
@@ -80,7 +80,7 @@ fn main() {
             ui.window("Render Editor")
                 .size([200.0, 100.0], imgui::Condition::FirstUseEver)
                 .build(|| {
-                    ui.color_edit4("Sphere Color", &mut uniforms.sphere.origin);
+                    // ui.color_edit4("Sphere Color", &mut uniforms.sphere.origin);
                     ui.color_edit3("Ambient Color", &mut uniforms.ambientColor);
                     ui.slider("Ambient Amount", 0.0, 1.0, &mut uniforms.ambientPower);
                     ui.combo("Shading Model", &mut uniforms.shadingModel, &UniformStruct::SHADING_MODELS, |model| {
@@ -88,9 +88,10 @@ fn main() {
                     });
                 });
 
+            let mut buffers = Buffers::build(&display);
             
             let uniformBuffer = getUniforms(&display, &uniforms);
-            let buffersBuffer = getBuffers(&display, &uniforms); 
+            let buffersBuffer = getBuffers(&mut buffers); 
 
             let newUniformBuffer = append_uniforms!(uniformBuffer, buffersBuffer);
 
