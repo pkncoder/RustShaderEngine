@@ -6,28 +6,28 @@ use glium::backend::glutin::glutin::surface::WindowSurface;
 use crate::structs::{*};
 
 pub struct Buffers {
-    sphereBuffer: UniformBuffer<SphereBlock>,
-    materialBuffer: UniformBuffer<MaterialBlock>
+    sphere_buffer: UniformBuffer<SphereBlock>,
+    material_buffer: UniformBuffer<MaterialBlock>
 }
 
 impl Buffers {
 
     pub fn build(display: &Display<WindowSurface>) -> Buffers {
         Buffers {
-            sphereBuffer: UniformBuffer::<SphereBlock>::empty_immutable(display).unwrap(),
-            materialBuffer: UniformBuffer::<MaterialBlock>::empty_immutable(display).unwrap()
+            sphere_buffer: UniformBuffer::<SphereBlock>::empty_immutable(display).unwrap(),
+            material_buffer: UniformBuffer::<MaterialBlock>::empty_immutable(display).unwrap()
         }
     }}
 
-pub fn getBuffers<'a>(buffers: &'a mut Buffers, objectData: &SphereBlock) -> impl Uniforms + 'a {
+pub fn get_buffers<'a>(buffers: &'a mut Buffers, object_data: &SphereBlock) -> impl Uniforms + 'a {
     {
-        let mut mapping = buffers.sphereBuffer.map();
-        mapping.spheres = objectData.spheres;
-        mapping.spheres_length = objectData.spheres_length;
+        let mut mapping = buffers.sphere_buffer.map();
+        mapping.spheres = object_data.spheres;
+        mapping.spheres_length = object_data.spheres_length;
     }
 
     {
-        let mut matping = buffers.materialBuffer.map();
+        let mut matping = buffers.material_buffer.map();
         matping.materials[0] = Material {
             color: [1.0, 0.0, 0.0, 0.0]
         };
@@ -38,8 +38,8 @@ pub fn getBuffers<'a>(buffers: &'a mut Buffers, objectData: &SphereBlock) -> imp
     }
 
     let uniforms = uniform! {
-        SphereBlock: &buffers.sphereBuffer,
-        MaterialBlock: &buffers.materialBuffer
+        SphereBlock: &buffers.sphere_buffer,
+        MaterialBlock: &buffers.material_buffer
     };
 
     return uniforms;

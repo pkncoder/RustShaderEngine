@@ -23,13 +23,13 @@ impl UniformStruct {
     pub const SHADING_MODELS: [&'static str; 2] = ["phong", "lambertion"];
 }
 
-pub fn getUniforms(display: &Display<WindowSurface>, uniformStruct: &UniformStruct) -> impl Uniforms {
+pub fn get_uniforms(display: &Display<WindowSurface>, uniform_struct: &UniformStruct) -> impl Uniforms {
     let (width, height) = display.get_framebuffer_dimensions();
 
     let uniforms = uniform! {
         iResolution: [width as f32, height as f32],
-        ambient: [uniformStruct.ambient_color[0], uniformStruct.ambient_color[1], uniformStruct.ambient_color[2], uniformStruct.ambient_power],
-        modelColoring: (UniformStruct::SHADING_MODELS[uniformStruct.shading_model], ShaderStage::Fragment)
+        ambient: [uniform_struct.ambient_color[0], uniform_struct.ambient_color[1], uniform_struct.ambient_color[2], uniform_struct.ambient_power],
+        modelColoring: (UniformStruct::SHADING_MODELS[uniform_struct.shading_model], ShaderStage::Fragment)
     };
 
 

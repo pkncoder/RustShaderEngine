@@ -24,10 +24,10 @@ mod frames;
 use frames::{SimpleFrame, imgui_init};
 
 mod uniforms;
-use uniforms::{getUniforms, UniformStruct};
+use uniforms::{get_uniforms, UniformStruct};
 
 mod buffers;
-use buffers::{getBuffers, Buffers};
+use buffers::{get_buffers, Buffers};
 
 mod object_node;
 use object_node::{*};
@@ -112,8 +112,8 @@ fn main() {
 
             let mut buffers = Buffers::build(&display);
             
-            let uniform_buffer = getUniforms(&display, &uniforms);
-            let buffers_buffer = getBuffers(&mut buffers, &object_data); 
+            let uniform_buffer = get_uniforms(&display, &uniforms);
+            let buffers_buffer = get_buffers(&mut buffers, &object_data); 
 
             let new_uniform_buffer = append_uniforms!(uniform_buffer, buffers_buffer);
 

@@ -48,7 +48,7 @@ pub fn fill_node(ui: &Ui, node: &mut Node) {
         && mouse_pos[0] > rect_min[0] + arrow_region_width;
 
     if clicked_label_only {
-        node.is_selected != node.is_selected;
+        node.is_selected = !node.is_selected;
     }
 
     if is_open.is_some() {
