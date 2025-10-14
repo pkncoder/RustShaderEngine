@@ -106,9 +106,9 @@ fn main() {
                     ui.combo("Shading Model", &mut uniforms.shading_model, &UniformStruct::SHADING_MODELS, |model| {
                         model.capitalize().into()
                     });
-                }); 
+                });
 
-            fill_node(&ui, &mut node);
+            Node::fill_node(&ui, &mut node);
 
             let mut buffers = Buffers::build(&display);
             
