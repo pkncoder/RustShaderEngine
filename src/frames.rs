@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use crate::screenMesh::ScreenMesh;
+use crate::screen_mesh::ScreenMesh;
 use crate::shader::Shader;
 
 use glium::{Frame, Surface};
@@ -74,7 +74,7 @@ impl SimpleFrame {
         target.clear_color(self.clr_red, self.clr_green, self.clr_blue, self.clr_alpha);
 
         target.draw(
-            &self.linked_mesh.as_ref().expect("Screen mesh needs to be linked first before vertex buffer use.").vertexBuffer,  
+            &self.linked_mesh.as_ref().expect("Screen mesh needs to be linked first before vertex buffer use.").vertex_buffer,  
             &self.linked_mesh.as_ref().expect("Screen mesh needs to be linked first before index buffer use.").indices, 
             &self.linked_shader.as_ref().expect("Shader needs to be linked first.").program, 
             uniforms, 

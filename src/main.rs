@@ -14,8 +14,8 @@ use capitalize::Capitalize;
 mod simple_init;
 use simple_init::init_app;
 
-mod screenMesh;
-use screenMesh::ScreenMesh;
+mod screen_mesh;
+use screen_mesh::ScreenMesh;
 
 mod structs;
 use structs::{*};
@@ -37,20 +37,29 @@ use object_node::Node;
 
 fn main() {
 
+
+    /* Initializations and building */
+
+    // Winit / Glium / Imgui initialization
     let (event_loop, window, display, mut winit_platform, mut imgui_context, mut imgui_renderer) = init_app();
 
-    // Screen mesh and shader building
+    // Frame, screen mesh, and shader building
+    let mut frame = SimpleFrame::build();
     let screen_mesh = ScreenMesh::build(&display);
     let shader = Shader::build(&display, "shaders/vertex.vert", "shaders/fragment.frag", Some("./shaders/includes"));
 
-    // Frame building
-    let mut frame = SimpleFrame::build();
+    // Linking the screen mesh and shader
     frame.link_mesh(screen_mesh);
     frame.link_shader(shader);
 
-    // Uniform building
-    let mut last_frame = std::time::Instant::now();
+
+    /* UNIFORMS */
+
+    // Build the uniforms
     let mut uniforms = UniformStruct::build();
+
+    // Frametime
+    let mut last_frame = std::time::Instant::now();
 
     // Object building
     let mut object_data = SphereBlock::default();
@@ -67,12 +76,13 @@ fn main() {
     };
 
     // Node creation
-    // TODO: Use objects
     let mut node = Node::new("First".to_string(), None);
     node.children.push(Node::new("Sph1".to_string(), Some(object_data.spheres[0])));
     node.children.push(Node::new("Sph2".to_string(), Some(object_data.spheres[1])));
 
-    // Event loop
+
+    /* Event loop */
+
     #[allow(deprecated)]
     event_loop.run(move |event, window_target| match event {
         Event::NewEvents(_) => { // Every frame
@@ -82,7 +92,7 @@ fn main() {
             imgui_context.io_mut().update_delta_time(now - last_frame);
             last_frame = now;
         }
-        Event::AboutToWait => { // Frame checking
+        Event::AboutToWait => { // Frame error checking
             winit_platform
                 .prepare_frame(imgui_context.io_mut(), &window)
                 .expect("Failed to prepare frame");
@@ -111,7 +121,7 @@ fn main() {
                     });
                 });
 
-            // UI Node tree
+            // UI object tree
             Node::fill_node(&ui, &mut node);
 
             // Buffers building
@@ -121,7 +131,7 @@ fn main() {
             let uniform_buffer = get_uniforms(&display, &uniforms);
             let buffers_buffer = get_buffers(&mut buffers, &object_data); 
 
-            // Get a new uniform buffer from the two buffers
+            // Append the two uniforms together to get the new uniform buffer
             let new_uniform_buffer = append_uniforms!(uniform_buffer, buffers_buffer);
 
             // Draw the frame
@@ -134,7 +144,7 @@ fn main() {
                 &mut winit_platform,
             );
 
-            // Draw the imgui frame
+            // Render imgui ontop of the frame
             frame.render_imgui(&mut imgui_context, &mut imgui_renderer);
 
             // Mark frame as complete

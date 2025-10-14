@@ -1,5 +1,3 @@
-#![allow(non_snake_case)]
-
 use std::fs;
 
 use glium::Program;
@@ -14,34 +12,34 @@ pub struct Shader {
 }
 
 impl Shader {
-    pub fn build<'a>(display: &Display<WindowSurface>, vertexShaderPath: &str, fragmentShaderPath: &str, includesDirectory: Option<&str>) -> Shader {
+    pub fn build<'a>(display: &Display<WindowSurface>, vertex_shader_path: &str, fragment_shader_path: &str, includes_directory: Option<&str>) -> Shader {
     
-        let vertexShader = fs::read_to_string(vertexShaderPath).expect("Should have been able to read the file");
-        let fragmentShader = fs::read_to_string(fragmentShaderPath).expect("Should have been able to read the file");
+        let vertex_shader = fs::read_to_string(vertex_shader_path).expect("Should have been able to read the file");
+        let fragment_shader = fs::read_to_string(fragment_shader_path).expect("Should have been able to read the file");
 
-        let mut finalFragmentShader = fragmentShader.clone();
-        if includesDirectory.is_some() {
-            finalFragmentShader = Self::expandShaderWithIncludes(&fragmentShader, includesDirectory.expect("Error in unwrapping include directory string."));
+        let mut final_fragment_shader = fragment_shader.clone();
+        if includes_directory.is_some() {
+            final_fragment_shader = Self::expand_shader_with_includes(&fragment_shader, includes_directory.expect("Error in unwrapping include directory string."));
         }
 
         Shader {
-            program: glium::Program::from_source(display, &vertexShader, &finalFragmentShader, None).unwrap()
+            program: glium::Program::from_source(display, &vertex_shader, &final_fragment_shader, None).unwrap()
         }
     }
 
-    pub fn expandShaderWithIncludes<'a> (shader: &'a str, includesDirectory: &'a str) -> String {
-        let files = fs::read_dir(includesDirectory).unwrap();
+    pub fn expand_shader_with_includes<'a> (shader: &'a str, includes_directory: &'a str) -> String {
+        let files = fs::read_dir(includes_directory).unwrap();
 
-        let mut expandedShader = Context::new();
+        let mut expanded_shader = Context::new();
 
         for file in files {
             let path = file.expect("Error in reading file path.").path();
             if !path.is_dir() {
-                let pathStr = path.to_str().expect("Error in getting file path string");
-                expandedShader.include(path.file_name().expect("Failed to get file name.").to_str().expect("Failed to get string from OSStr"), &fs::read_to_string(pathStr).expect(&format!("Include not found: {}", &pathStr)));
+                let path_str = path.to_str().expect("Error in getting file path string");
+                expanded_shader.include(path.file_name().expect("Failed to get file name.").to_str().expect("Failed to get string from OSStr"), &fs::read_to_string(path_str).expect(&format!("Include not found: {}", &path_str)));
             }
         }
 
-        return expandedShader.expand(shader).expect("Failed to expand shader.");
+        return expanded_shader.expand(shader).expect("Failed to expand shader.");
     }
 }

@@ -1,5 +1,3 @@
-#![allow(non_snake_case)]
-
 use glium::backend::glutin::Display;
 use glium::backend::glutin::glutin::surface::WindowSurface;
 
@@ -14,7 +12,7 @@ pub struct Vertex {
 implement_vertex!(Vertex, position);
 
 pub struct ScreenMesh {
-    pub vertexBuffer: VertexBuffer<Vertex>,
+    pub vertex_buffer: VertexBuffer<Vertex>,
     pub indices: NoIndices
 }
 
@@ -29,7 +27,7 @@ impl ScreenMesh {
         ];
 
         ScreenMesh {
-            vertexBuffer: glium::VertexBuffer::new(display, &shape).unwrap(),
+            vertex_buffer: glium::VertexBuffer::new(display, &shape).unwrap(),
             indices: glium::index::NoIndices(glium::index::PrimitiveType::TriangleFan)
         }
     }
