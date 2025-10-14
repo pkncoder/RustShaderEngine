@@ -1,4 +1,4 @@
-#![allow(non_snake_case)]
+#![allow(dead_code)]
 
 use crate::screenMesh::ScreenMesh;
 use crate::shader::Shader;
@@ -16,46 +16,46 @@ use glium::DrawParameters;
 use imgui::Ui;
 
 pub struct SimpleFrame {
-    pub clrRed: f32,
-    pub clrBlue: f32,
-    pub clrGreen: f32,
-    pub clrAlpha: f32,
+    pub clr_red: f32,
+    pub clr_blue: f32,
+    pub clr_green: f32,
+    pub clr_alpha: f32,
 
     pub target: Option<Frame>,
 
-    pub linkedMesh: Option<ScreenMesh>,
-    pub linkedShader: Option<Shader>
+    pub linked_mesh: Option<ScreenMesh>,
+    pub linked_shader: Option<Shader>
 }
 
 impl SimpleFrame {
 
     pub fn build() -> SimpleFrame {
         SimpleFrame {
-            clrRed: 0.0,
-            clrGreen: 0.0,
-            clrBlue: 0.0,
-            clrAlpha: 0.0,
+            clr_red: 1.0,
+            clr_green: 0.4,
+            clr_blue: 0.8,
+            clr_alpha: 1.0,
 
             target: None,
 
-            linkedMesh: None,
-            linkedShader: None
+            linked_mesh: None,
+            linked_shader: None
         }
     }
 
-    pub fn setClearColor(&mut self, red: f32, green: f32, blue: f32, alpha: f32) {
-        self.clrRed = red;
-        self.clrGreen = green;
-        self.clrBlue = blue;
-        self.clrAlpha = alpha;
+    pub fn set_clear_color(&mut self, red: f32, green: f32, blue: f32, alpha: f32) {
+        self.clr_red = red;
+        self.clr_green = green;
+        self.clr_blue = blue;
+        self.clr_alpha = alpha;
     }
 
-    pub fn linkMesh(&mut self, mesh: ScreenMesh) {
-        self.linkedMesh = Some(mesh);
+    pub fn link_mesh(&mut self, mesh: ScreenMesh) {
+        self.linked_mesh = Some(mesh);
     }
 
-    pub fn linkShader(&mut self, shader: Shader) {
-        self.linkedShader = Some(shader);
+    pub fn link_shader(&mut self, shader: Shader) {
+        self.linked_shader = Some(shader);
     }
 
     pub fn draw<
@@ -64,38 +64,38 @@ impl SimpleFrame {
         &mut self,
         display: &Display<WindowSurface>, 
         uniforms: &U, 
-        drawParams: &DrawParameters<'_>,
+        draw_params: &DrawParameters<'_>,
         window: &Window,
         ui: &Ui,
-        winitPlatform: &mut imgui_winit_support::WinitPlatform,
+        winit_platform: &mut imgui_winit_support::WinitPlatform,
     ) {
 
         let mut target = display.draw();
-        target.clear_color(self.clrRed, self.clrGreen, self.clrBlue, self.clrAlpha);
+        target.clear_color(self.clr_red, self.clr_green, self.clr_blue, self.clr_alpha);
 
         target.draw(
-            &self.linkedMesh.as_ref().expect("Screen mesh needs to be linked first before vertex buffer use.").vertexBuffer,  
-            &self.linkedMesh.as_ref().expect("Screen mesh needs to be linked first before index buffer use.").indices, 
-            &self.linkedShader.as_ref().expect("Shader needs to be linked first.").program, 
+            &self.linked_mesh.as_ref().expect("Screen mesh needs to be linked first before vertex buffer use.").vertexBuffer,  
+            &self.linked_mesh.as_ref().expect("Screen mesh needs to be linked first before index buffer use.").indices, 
+            &self.linked_shader.as_ref().expect("Shader needs to be linked first.").program, 
             uniforms, 
-            drawParams
+            draw_params
         ).unwrap();
 
-        winitPlatform.prepare_render(ui, window);
+        winit_platform.prepare_render(ui, window);
 
         self.target = Some(target);
     }
 
-    pub fn renderImgui(
+    pub fn render_imgui(
         &mut self,
-        imguiContext: &mut imgui::Context,
+        imgui_context: &mut imgui::Context,
         renderer: &mut imgui_glium_renderer::Renderer
     ) {
         if let Some(mut target) = self.target.take() {
 
-            let drawData = imguiContext.render();
+            let draw_data = imgui_context.render();
             renderer
-                .render(&mut target, drawData)
+                .render(&mut target, draw_data)
                 .expect("Rendering failed.");
 
             self.target = Some(target);
@@ -115,19 +115,4 @@ impl SimpleFrame {
     }
 }
 
-pub fn imgui_init(window: &Window) -> (imgui_winit_support::WinitPlatform, imgui::Context) {
-    let mut imgui_context = imgui::Context::create();
-    imgui_context.set_ini_filename(None);
 
-    let mut winit_platform = imgui_winit_support::WinitPlatform::new(&mut imgui_context);
-
-    let dpi_mode = imgui_winit_support::HiDpiMode::Default;
-
-    winit_platform.attach_window(imgui_context.io_mut(), window, dpi_mode);
-
-    imgui_context
-        .fonts()
-        .add_font(&[imgui::FontSource::DefaultFontData { config: None }]);
-
-    (winit_platform, imgui_context)
-}

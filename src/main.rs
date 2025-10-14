@@ -11,6 +11,9 @@ use glium::backend::{
 
 use capitalize::Capitalize;
 
+mod simple_init;
+use simple_init::init_app;
+
 mod screenMesh;
 use screenMesh::ScreenMesh;
 
@@ -21,7 +24,7 @@ mod shader;
 use shader::Shader;
 
 mod frames;
-use frames::{SimpleFrame, imgui_init};
+use frames::SimpleFrame;
 
 mod uniforms;
 use uniforms::{get_uniforms, UniformStruct};
@@ -30,23 +33,11 @@ mod buffers;
 use buffers::{get_buffers, Buffers};
 
 mod object_node;
-use object_node::{*};
+use object_node::Node;
 
 fn main() {
 
-    // Eventloop, window, and display building
-    let event_loop = glium::winit::event_loop::EventLoop::builder()
-        .build()
-        .expect("event loop building");
-    let (window, display) = glium::backend::glutin::SimpleWindowBuilder::new()
-        .with_title("Rust Shader Engine")
-        .build(&event_loop);
-
-    // Winit initializion, and Imgui Context and Renderer init
-    let (mut winit_platform, mut imgui_context) = imgui_init(&window);
-
-    let mut renderer = imgui_glium_renderer::Renderer::new(&mut imgui_context, &display)
-        .expect("Failed to initialize renderer");
+    let (event_loop, window, display, mut winit_platform, mut imgui_context, mut imgui_renderer) = init_app();
 
     // Screen mesh and shader building
     let screen_mesh = ScreenMesh::build(&display);
@@ -54,9 +45,8 @@ fn main() {
 
     // Frame building
     let mut frame = SimpleFrame::build();
-    frame.setClearColor(1.0, 0.4, 0.8, 1.0);
-    frame.linkMesh(screen_mesh);
-    frame.linkShader(shader);
+    frame.link_mesh(screen_mesh);
+    frame.link_shader(shader);
 
     // Uniform building
     let mut last_frame = std::time::Instant::now();
@@ -109,7 +99,7 @@ fn main() {
             // UI demo window
             ui.show_demo_window(&mut true);
 
-            // UI renderer editor
+            // UI imgui_renderer editor
             ui.window("Render Editor")
                 .size([200.0, 100.0], imgui::Condition::FirstUseEver)
                 .build(|| {
@@ -145,7 +135,7 @@ fn main() {
             );
 
             // Draw the imgui frame
-            frame.renderImgui(&mut imgui_context, &mut renderer);
+            frame.render_imgui(&mut imgui_context, &mut imgui_renderer);
 
             // Mark frame as complete
             frame.finish();
