@@ -1,13 +1,14 @@
 use crate::structs::Sphere;
-use imgui::{MouseButton, TreeNodeFlags, Ui};
+use imgui::{Ui, TreeNodeFlags, MouseButton};
 
 #[derive(PartialEq)]
 pub struct Node {
     pub name: String,
     pub children: Vec<Node>,
-    pub isSelected: bool,
 
-    pub sphere: Option<Sphere>
+    pub sphere: Option<Sphere>,
+
+    pub is_selected: bool
 }
 
 impl Node {
@@ -15,20 +16,18 @@ impl Node {
         Node {
             name: name,
             children: vec![],
-            isSelected: false,
-
-            sphere: sphere
+            sphere: sphere,
+            is_selected: false
         }
     }
 }
-
 
 pub fn fill_node(ui: &Ui, node: &mut Node) {
     let mut flags = TreeNodeFlags::OPEN_ON_ARROW
         | TreeNodeFlags::SPAN_AVAIL_WIDTH
         | TreeNodeFlags::NO_TREE_PUSH_ON_OPEN;
 
-    if node.isSelected {
+    if node.is_selected {
         flags |= TreeNodeFlags::SELECTED;
     }
 
@@ -49,7 +48,7 @@ pub fn fill_node(ui: &Ui, node: &mut Node) {
         && mouse_pos[0] > rect_min[0] + arrow_region_width;
 
     if clicked_label_only {
-        node.isSelected = !node.isSelected;
+        node.is_selected != node.is_selected;
     }
 
     if is_open.is_some() {

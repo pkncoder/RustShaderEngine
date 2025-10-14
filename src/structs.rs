@@ -9,9 +9,9 @@ implement_uniform_block!(Material, color);
 #[derive(Copy, Clone, Debug)]
 pub struct MaterialBlock {
     pub materials: [Material; 10],
-    pub materialsLength: f32
+    pub materials_length: f32
 }
-implement_uniform_block!(MaterialBlock, materials, materialsLength);
+implement_uniform_block!(MaterialBlock, materials, materials_length);
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -25,7 +25,7 @@ implement_uniform_block!(Sphere, origin, data);
 #[derive(Copy, Clone, Debug)]
 pub struct SphereBlock {
     pub spheres: [Sphere; 10],
-    pub spheresLength: f32
+    pub spheres_length: f32
 }
 
 impl Default for SphereBlock {
@@ -35,9 +35,9 @@ impl Default for SphereBlock {
                 origin: [0.0; 4],
                 data: [0.0; 4]
             }; 10],
-            spheresLength: 0.0
+            spheres_length: 0.0
         }
     }
 }
 
-implement_uniform_block!(SphereBlock, spheres, spheresLength);
+implement_uniform_block!(SphereBlock, spheres, spheres_length);

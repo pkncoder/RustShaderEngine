@@ -6,17 +6,17 @@ use glium::backend::glutin::glutin::surface::WindowSurface;
 use glium::program::ShaderStage;
 
 pub struct UniformStruct {
-    pub ambientColor: [f32; 3],
-    pub ambientPower: f32,
-    pub shadingModel: usize
+    pub ambient_color: [f32; 3],
+    pub ambient_power: f32,
+    pub shading_model: usize
 }
 
 impl UniformStruct {
     pub fn build() -> UniformStruct {
         UniformStruct {
-            ambientColor: [1.0, 1.0, 1.0],
-            ambientPower: 0.2,
-            shadingModel: 0 as usize
+            ambient_color: [1.0, 1.0, 1.0],
+            ambient_power: 0.2,
+            shading_model: 0 as usize
         }
     }
 
@@ -28,8 +28,8 @@ pub fn getUniforms(display: &Display<WindowSurface>, uniformStruct: &UniformStru
 
     let uniforms = uniform! {
         iResolution: [width as f32, height as f32],
-        ambient: [uniformStruct.ambientColor[0], uniformStruct.ambientColor[1], uniformStruct.ambientColor[2], uniformStruct.ambientPower],
-        modelColoring: (UniformStruct::SHADING_MODELS[uniformStruct.shadingModel], ShaderStage::Fragment)
+        ambient: [uniformStruct.ambient_color[0], uniformStruct.ambient_color[1], uniformStruct.ambient_color[2], uniformStruct.ambient_power],
+        modelColoring: (UniformStruct::SHADING_MODELS[uniformStruct.shading_model], ShaderStage::Fragment)
     };
 
 

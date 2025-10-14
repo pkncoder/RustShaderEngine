@@ -14,12 +14,12 @@ uniform vec4 ambient;
 
 layout(std140) uniform SphereBlock {
   Sphere spheres[10];
-  float spheresLength;
+  float spheres_length;
 };
 
 layout(std140) uniform MaterialBlock {
   Material materials[10];
-  float materialsLength;
+  float materials_length;
 };
 
 #include <interceptions.glsl>

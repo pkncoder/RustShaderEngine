@@ -1,4 +1,3 @@
-#![allow(non_snake_case)]
 #![allow(unused_assignments)]
 
 #[macro_use]
@@ -30,8 +29,8 @@ use uniforms::{getUniforms, UniformStruct};
 mod buffers;
 use buffers::{getBuffers, Buffers};
 
-mod objectNode;
-use objectNode::{*};
+mod object_node;
+use object_node::{*};
 
 fn main() {
     
@@ -49,33 +48,33 @@ fn main() {
     let mut renderer = imgui_glium_renderer::Renderer::new(&mut imgui_context, &display)
         .expect("Failed to initialize renderer");
 
-    let screenMesh = ScreenMesh::build(&display);
+    let screen_mesh = ScreenMesh::build(&display);
     let shader = Shader::build(&display, "shaders/vertex.vert", "shaders/fragment.frag", Some("./shaders/includes"));
 
     let mut frame = SimpleFrame::build();
     frame.setClearColor(1.0, 0.4, 0.8, 1.0);
-    frame.linkMesh(screenMesh);
+    frame.linkMesh(screen_mesh);
     frame.linkShader(shader);
 
     let mut last_frame = std::time::Instant::now();
     let mut uniforms = UniformStruct::build();
 
-    let mut objectData = SphereBlock::default();
+    let mut object_data = SphereBlock::default();
     {
-        objectData.spheres[0] = Sphere {
+        object_data.spheres[0] = Sphere {
             origin: [0.0, 0.0, 5.0, 1.0],
             data: [0.0, 0.0, 0.0, 0.0]
         };
-        objectData.spheres[1] = Sphere {
+        object_data.spheres[1] = Sphere {
             origin: [1.5, 1.5, 6.0, 0.7],
             data: [0.0, 0.0, 0.0, 1.0]
         };
-        objectData.spheresLength = 2.0;
+        object_data.spheres_length = 2.0;
     };
 
     let mut node = Node::new("First".to_string(), None);
-    node.children.push(Node::new("Sph1".to_string(), Some(objectData.spheres[0])));
-    node.children.push(Node::new("Sph2".to_string(), Some(objectData.spheres[1])));
+    node.children.push(Node::new("Sph1".to_string(), Some(object_data.spheres[0])));
+    node.children.push(Node::new("Sph2".to_string(), Some(object_data.spheres[1])));
 
     #[allow(deprecated)]
     event_loop.run(move |event, window_target| match event {
@@ -101,10 +100,10 @@ fn main() {
             ui.window("Render Editor")
                 .size([200.0, 100.0], imgui::Condition::FirstUseEver)
                 .build(|| {
-                    ui.color_edit4("Sphere Origin", &mut objectData.spheres[0].origin);
-                    ui.color_edit3("Ambient Color", &mut uniforms.ambientColor);
-                    ui.slider("Ambient Amount", 0.0, 1.0, &mut uniforms.ambientPower);
-                    ui.combo("Shading Model", &mut uniforms.shadingModel, &UniformStruct::SHADING_MODELS, |model| {
+                    ui.color_edit4("Sphere Origin", &mut object_data.spheres[0].origin);
+                    ui.color_edit3("Ambient Color", &mut uniforms.ambient_color);
+                    ui.slider("Ambient Amount", 0.0, 1.0, &mut uniforms.ambient_power);
+                    ui.combo("Shading Model", &mut uniforms.shading_model, &UniformStruct::SHADING_MODELS, |model| {
                         model.capitalize().into()
                     });
                 }); 
@@ -113,14 +112,14 @@ fn main() {
 
             let mut buffers = Buffers::build(&display);
             
-            let uniformBuffer = getUniforms(&display, &uniforms);
-            let buffersBuffer = getBuffers(&mut buffers, &objectData); 
+            let uniform_buffer = getUniforms(&display, &uniforms);
+            let buffers_buffer = getBuffers(&mut buffers, &object_data); 
 
-            let newUniformBuffer = append_uniforms!(uniformBuffer, buffersBuffer);
+            let new_uniform_buffer = append_uniforms!(uniform_buffer, buffers_buffer);
 
              frame.draw(
                 &display,
-                &newUniformBuffer,
+                &new_uniform_buffer,
                 &Default::default(),
                 &window,
                 &ui,

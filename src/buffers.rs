@@ -23,7 +23,7 @@ pub fn getBuffers<'a>(buffers: &'a mut Buffers, objectData: &SphereBlock) -> imp
     {
         let mut mapping = buffers.sphereBuffer.map();
         mapping.spheres = objectData.spheres;
-        mapping.spheresLength = objectData.spheresLength;
+        mapping.spheres_length = objectData.spheres_length;
     }
 
     {
@@ -34,7 +34,7 @@ pub fn getBuffers<'a>(buffers: &'a mut Buffers, objectData: &SphereBlock) -> imp
         matping.materials[1] = Material {
             color: [0.0, 0.0, 1.0, 0.0]
         };
-        matping.materialsLength = 2.0;
+        matping.materials_length = 2.0;
     }
 
     let uniforms = uniform! {
