@@ -21,7 +21,7 @@ impl Node {
         }
     }
 
-    pub fn fill_node(ui: &Ui, node: &mut Node) {
+    pub fn draw_selectable_tree(ui: &Ui, node: &mut Node) {
         let mut flags = TreeNodeFlags::OPEN_ON_ARROW
             | TreeNodeFlags::SPAN_AVAIL_WIDTH
             | TreeNodeFlags::NO_TREE_PUSH_ON_OPEN;
@@ -53,7 +53,7 @@ impl Node {
         if is_open.is_some() {
             ui.indent();
             for child in &mut node.children {
-                Self::fill_node(ui, child);
+                Self::draw_selectable_tree(ui, child);
             }
             ui.unindent();
         }

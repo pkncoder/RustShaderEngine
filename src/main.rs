@@ -122,7 +122,7 @@ fn main() {
                 });
 
             // UI object tree
-            Node::fill_node(&ui, &mut node);
+            Node::draw_selectable_tree(&ui, &mut node);
 
             // Buffers building
             let mut buffers = Buffers::build(&display);
