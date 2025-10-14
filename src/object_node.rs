@@ -1,32 +1,35 @@
 use crate::structs::Sphere;
 use imgui::{Ui, TreeNodeFlags, MouseButton};
+use uuid::Uuid;
 
 #[derive(PartialEq)]
 pub struct Node {
     pub name: String,
-    pub children: Vec<Node>,
+    pub node_id: Uuid,
 
     pub sphere: Option<Sphere>,
 
-    pub is_selected: bool
+    pub children: Vec<Node>
 }
 
 impl Node {
     pub fn new(name: String, sphere: Option<Sphere>) -> Self {
         Node {
             name: name,
-            children: vec![],
+            node_id: Uuid::new_v4(),
+
             sphere: sphere,
-            is_selected: false
+
+            children: vec![]
         }
     }
 
-    pub fn draw_selectable_tree(ui: &Ui, node: &mut Node) {
+    pub fn draw_selectable_tree(ui: &Ui, node: &mut Node, selected_node_index: &mut Option<Uuid>) -> Option<Uuid> {
         let mut flags = TreeNodeFlags::OPEN_ON_ARROW
             | TreeNodeFlags::SPAN_AVAIL_WIDTH
             | TreeNodeFlags::NO_TREE_PUSH_ON_OPEN;
 
-        if node.is_selected {
+        if selected_node_index.is_some() && node.node_id == selected_node_index.unwrap() {
             flags |= TreeNodeFlags::SELECTED;
         }
 
@@ -47,15 +50,21 @@ impl Node {
             && mouse_pos[0] > rect_min[0] + arrow_region_width;
 
         if clicked_label_only {
-            node.is_selected = !node.is_selected;
+            if !selected_node_index.is_some() || node.node_id != selected_node_index.unwrap() {
+                *selected_node_index = Some(node.node_id);
+            } else {
+                *selected_node_index = None;
+            }
         }
 
         if is_open.is_some() {
             ui.indent();
             for child in &mut node.children {
-                Self::draw_selectable_tree(ui, child);
+                Self::draw_selectable_tree(ui, child, selected_node_index);
             }
             ui.unindent();
         }
+
+        return *selected_node_index;
     }
 }

@@ -80,6 +80,8 @@ fn main() {
     node.children.push(Node::new("Sph1".to_string(), Some(object_data.spheres[0])));
     node.children.push(Node::new("Sph2".to_string(), Some(object_data.spheres[1])));
 
+    let mut selected_node_index = None;
+
 
     /* Event loop */
 
@@ -122,8 +124,8 @@ fn main() {
                 });
 
             // UI object tree
-            Node::draw_selectable_tree(&ui, &mut node);
-
+            selected_node_index = Node::draw_selectable_tree(&ui, &mut node, &mut selected_node_index);
+            
             // Buffers building
             let mut buffers = Buffers::build(&display);
             
