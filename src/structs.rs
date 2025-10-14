@@ -14,7 +14,7 @@ pub struct MaterialBlock {
 implement_uniform_block!(MaterialBlock, materials, materialsLength);
 
 #[repr(C)]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Sphere {
     pub origin: [f32; 4],
     pub data: [f32; 4]
@@ -27,4 +27,17 @@ pub struct SphereBlock {
     pub spheres: [Sphere; 10],
     pub spheresLength: f32
 }
+
+impl Default for SphereBlock {
+    fn default() -> Self {
+        SphereBlock {
+            spheres: [ Sphere {
+                origin: [0.0; 4],
+                data: [0.0; 4]
+            }; 10],
+            spheresLength: 0.0
+        }
+    }
+}
+
 implement_uniform_block!(SphereBlock, spheres, spheresLength);

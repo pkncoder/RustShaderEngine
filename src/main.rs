@@ -16,6 +16,7 @@ mod screenMesh;
 use screenMesh::ScreenMesh;
 
 mod structs;
+use structs::{*};
 
 mod shader;
 use shader::Shader;
@@ -28,6 +29,9 @@ use uniforms::{getUniforms, UniformStruct};
 
 mod buffers;
 use buffers::{getBuffers, Buffers};
+
+mod objectNode;
+use objectNode::{*};
 
 fn main() {
     
@@ -56,6 +60,23 @@ fn main() {
     let mut last_frame = std::time::Instant::now();
     let mut uniforms = UniformStruct::build();
 
+    let mut objectData = SphereBlock::default();
+    {
+        objectData.spheres[0] = Sphere {
+            origin: [0.0, 0.0, 5.0, 1.0],
+            data: [0.0, 0.0, 0.0, 0.0]
+        };
+        objectData.spheres[1] = Sphere {
+            origin: [1.5, 1.5, 6.0, 0.7],
+            data: [0.0, 0.0, 0.0, 1.0]
+        };
+        objectData.spheresLength = 2.0;
+    };
+
+    let mut node = Node::new("First".to_string(), None);
+    node.children.push(Node::new("Sph1".to_string(), Some(objectData.spheres[0])));
+    node.children.push(Node::new("Sph2".to_string(), Some(objectData.spheres[1])));
+
     #[allow(deprecated)]
     event_loop.run(move |event, window_target| match event {
         Event::NewEvents(_) => {
@@ -76,22 +97,24 @@ fn main() {
 
             let ui = imgui_context.frame();
 
-            // ui.show_demo_window(&mut true);
+            ui.show_demo_window(&mut true);
             ui.window("Render Editor")
                 .size([200.0, 100.0], imgui::Condition::FirstUseEver)
                 .build(|| {
-                    // ui.color_edit4("Sphere Color", &mut uniforms.sphere.origin);
+                    ui.color_edit4("Sphere Origin", &mut objectData.spheres[0].origin);
                     ui.color_edit3("Ambient Color", &mut uniforms.ambientColor);
                     ui.slider("Ambient Amount", 0.0, 1.0, &mut uniforms.ambientPower);
                     ui.combo("Shading Model", &mut uniforms.shadingModel, &UniformStruct::SHADING_MODELS, |model| {
                         model.capitalize().into()
                     });
-                });
+                }); 
+
+            fill_node(&ui, &mut node);
 
             let mut buffers = Buffers::build(&display);
             
             let uniformBuffer = getUniforms(&display, &uniforms);
-            let buffersBuffer = getBuffers(&mut buffers); 
+            let buffersBuffer = getBuffers(&mut buffers, &objectData); 
 
             let newUniformBuffer = append_uniforms!(uniformBuffer, buffersBuffer);
 

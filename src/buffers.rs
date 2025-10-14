@@ -19,18 +19,11 @@ impl Buffers {
         }
     }}
 
-pub fn getBuffers<'a>(buffers: &'a mut Buffers) -> impl Uniforms + 'a {
+pub fn getBuffers<'a>(buffers: &'a mut Buffers, objectData: &SphereBlock) -> impl Uniforms + 'a {
     {
         let mut mapping = buffers.sphereBuffer.map();
-        mapping.spheres[0] = Sphere {
-            origin: [0.0, 0.0, 5.0, 1.0],
-            data: [0.0, 0.0, 0.0, 0.0]
-        };
-        mapping.spheres[1] = Sphere {
-            origin: [2.0, 2.0, 6.0, 0.7],
-            data: [0.0, 0.0, 0.0, 1.0]
-        };
-        mapping.spheresLength = 2.0;
+        mapping.spheres = objectData.spheres;
+        mapping.spheresLength = objectData.spheresLength;
     }
 
     {
