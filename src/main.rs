@@ -32,8 +32,8 @@ use uniforms::{get_uniforms, UniformStruct};
 mod buffers;
 use buffers::{get_buffers, Buffers};
 
-mod object_node;
-use object_node::Node;
+mod object_tree;
+use object_tree::Node;
 
 fn main() {
 
@@ -125,7 +125,23 @@ fn main() {
 
             // UI object tree
             selected_node_index = Node::draw_selectable_tree(&ui, &mut node, &mut selected_node_index);
-            
+            let mut selected_node = node.get_node_from_id(selected_node_index);
+
+            ui.window("Object Editor")
+                .size([300.0, 300.0], imgui::Condition::FirstUseEver)
+                .build(|| {
+                    if selected_node_index.is_some() {
+                        if selected_node.is_some() {
+                            // ui.text(&selected_node.unwrap().name);
+                            ui.slider("Radius", 0.1, 100.0, &mut selected_node.as_mut().unwrap().sphere.as_mut().unwrap().origin[3]);
+                        } else {
+                            ui.text("Select something")
+                        }
+                    } else {
+                        ui.text("Select Something");
+                    }
+                });
+
             // Buffers building
             let mut buffers = Buffers::build(&display);
             
