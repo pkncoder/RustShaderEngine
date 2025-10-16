@@ -9,8 +9,6 @@ use glium::backend::{
     winit::window::Window
 };
 
-use capitalize::Capitalize;
-
 mod simple_init;
 use simple_init::init_app;
 
@@ -34,6 +32,12 @@ use buffers::{get_buffers, Buffers};
 
 mod object_tree;
 use object_tree::Node;
+
+mod object_editor;
+use object_editor::draw_object_editor;
+
+mod renderer_editor;
+use renderer_editor::draw_renderer_editor;
 
 fn main() {
 
@@ -77,8 +81,8 @@ fn main() {
 
     // Node creation
     let mut node = Node::new("First".to_string(), None);
-    node.children.push(Node::new("Sph1".to_string(), Some(object_data.spheres[0])));
-    node.children.push(Node::new("Sph2".to_string(), Some(object_data.spheres[1])));
+    node.children.push(Node::new("Sph1".to_string(), Some(0)));
+    node.children.push(Node::new("Sph2".to_string(), Some(1)));
 
     let mut selected_node_index = None;
 
@@ -109,38 +113,17 @@ fn main() {
             let ui = imgui_context.frame();
 
             // UI demo window
-            ui.show_demo_window(&mut true);
+            // ui.show_demo_window(&mut true);
 
             // UI imgui_renderer editor
-            ui.window("Render Editor")
-                .size([200.0, 100.0], imgui::Condition::FirstUseEver)
-                .build(|| {
-                    ui.color_edit4("Sphere Origin", &mut object_data.spheres[0].origin);
-                    ui.color_edit3("Ambient Color", &mut uniforms.ambient_color);
-                    ui.slider("Ambient Amount", 0.0, 1.0, &mut uniforms.ambient_power);
-                    ui.combo("Shading Model", &mut uniforms.shading_model, &UniformStruct::SHADING_MODELS, |model| {
-                        model.capitalize().into()
-                    });
-                });
+            draw_renderer_editor(&ui, &mut uniforms);
 
             // UI object tree
             selected_node_index = Node::draw_selectable_tree(&ui, &mut node, &mut selected_node_index);
             let mut selected_node = node.get_node_from_id(selected_node_index);
 
-            ui.window("Object Editor")
-                .size([300.0, 300.0], imgui::Condition::FirstUseEver)
-                .build(|| {
-                    if selected_node_index.is_some() {
-                        if selected_node.is_some() {
-                            // ui.text(&selected_node.unwrap().name);
-                            ui.slider("Radius", 0.1, 100.0, &mut selected_node.as_mut().unwrap().sphere.as_mut().unwrap().origin[3]);
-                        } else {
-                            ui.text("Select something")
-                        }
-                    } else {
-                        ui.text("Select Something");
-                    }
-                });
+            // Object Editor
+            draw_object_editor(&ui, &mut selected_node, &mut object_data.spheres);
 
             // Buffers building
             let mut buffers = Buffers::build(&display);

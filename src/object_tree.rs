@@ -7,18 +7,18 @@ pub struct Node {
     pub name: String,
     pub node_id: Uuid,
 
-    pub sphere: Option<Sphere>,
+    pub sphere_index: Option<usize>,
 
     pub children: Vec<Node>
 }
 
 impl Node {
-    pub fn new(name: String, sphere: Option<Sphere>) -> Self {
+    pub fn new(name: String, sphere_index: Option<usize>) -> Self {
         Node {
             name: name,
             node_id: Uuid::new_v4(),
 
-            sphere: sphere,
+            sphere_index: sphere_index,
 
             children: vec![]
         }
@@ -75,6 +75,8 @@ impl Node {
     }
 
     pub fn get_node_from_id(&mut self, id: Option<Uuid>) -> Option<&mut Node> {
+        
+        // Check to make sure id exists
         if id.is_none() {
             return None;
         }
@@ -92,6 +94,6 @@ impl Node {
         }
 
         // Not found
-        None
+        return None;
     }
 }
