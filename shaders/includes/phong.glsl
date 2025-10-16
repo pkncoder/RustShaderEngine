@@ -9,7 +9,7 @@ subroutine(shade) vec3 phong(Ray ray, HitInfo hit) {
     vec3 diffuse = max(dot(hit.normal, lightDir), 0.0) * lightColor * hit.material.color.xyz;
 
     vec3 reflectedDir = reflect(-lightDir, hit.normal);
-    vec3 specular = pow(max(dot(normalize(ray.origin - hit.hitPos), reflectedDir), 0.0), 32.0) * lightColor * 1.0;
+    vec3 specular = pow(max(dot(normalize(ray.origin - hit.hitPos), reflectedDir), 0.0), 16) * lightColor * 1.0;
 
  
     return (ambient + diffuse + specular);
