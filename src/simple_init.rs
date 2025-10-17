@@ -1,22 +1,23 @@
 use glium::backend::{
+    glutin::{glutin::surface::WindowSurface, Display, SimpleWindowBuilder},
     winit::event_loop::EventLoop,
     winit::window::Window,
-    glutin::{
-        Display,
-        SimpleWindowBuilder,
-        glutin::surface::WindowSurface
-    }
 };
 
 use imgui::Context;
-use imgui_winit_support::WinitPlatform;
 use imgui_glium_renderer::Renderer;
+use imgui_winit_support::WinitPlatform;
 
 // use glium::backend::glutin::glutin::surface::WindowSurface;
-pub fn init_app() -> (EventLoop<()>, Window, Display<WindowSurface>, WinitPlatform, Context, Renderer) {
-    let event_loop = EventLoop::builder()
-        .build()
-        .expect("event loop building");
+pub fn init_app() -> (
+    EventLoop<()>,
+    Window,
+    Display<WindowSurface>,
+    WinitPlatform,
+    Context,
+    Renderer,
+) {
+    let event_loop = EventLoop::builder().build().expect("event loop building");
     let (window, display) = SimpleWindowBuilder::new()
         .with_title("Rust Shader Engine")
         .build(&event_loop);
@@ -26,7 +27,14 @@ pub fn init_app() -> (EventLoop<()>, Window, Display<WindowSurface>, WinitPlatfo
     let imgui_renderer = imgui_glium_renderer::Renderer::new(&mut imgui_context, &display)
         .expect("Failed to initialize imgui_renderer");
 
-    return (event_loop, window, display, winit_platform, imgui_context, imgui_renderer);
+    (
+        event_loop,
+        window,
+        display,
+        winit_platform,
+        imgui_context,
+        imgui_renderer,
+    )
 }
 
 pub fn imgui_init(window: &Window) -> (WinitPlatform, Context) {

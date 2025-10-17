@@ -1,23 +1,23 @@
-use glium::uniforms::{Uniforms, UniformBuffer};
+use glium::uniforms::{UniformBuffer, Uniforms};
 
-use glium::backend::glutin::Display;
 use glium::backend::glutin::glutin::surface::WindowSurface;
+use glium::backend::glutin::Display;
 
-use crate::structs::{*};
+use crate::structs::*;
 
 pub struct Buffers {
     sphere_buffer: UniformBuffer<SphereBlock>,
-    material_buffer: UniformBuffer<MaterialBlock>
+    material_buffer: UniformBuffer<MaterialBlock>,
 }
 
 impl Buffers {
-
     pub fn build(display: &Display<WindowSurface>) -> Buffers {
         Buffers {
             sphere_buffer: UniformBuffer::<SphereBlock>::empty_immutable(display).unwrap(),
-            material_buffer: UniformBuffer::<MaterialBlock>::empty_immutable(display).unwrap()
+            material_buffer: UniformBuffer::<MaterialBlock>::empty_immutable(display).unwrap(),
         }
-    }}
+    }
+}
 
 pub fn get_buffers<'a>(buffers: &'a mut Buffers, object_data: &SphereBlock) -> impl Uniforms + 'a {
     {
@@ -29,10 +29,10 @@ pub fn get_buffers<'a>(buffers: &'a mut Buffers, object_data: &SphereBlock) -> i
     {
         let mut matping = buffers.material_buffer.map();
         matping.materials[0] = Material {
-            color: [1.0, 0.0, 0.0, 0.0]
+            color: [1.0, 0.0, 0.0, 0.0],
         };
         matping.materials[1] = Material {
-            color: [0.0, 0.0, 1.0, 0.0]
+            color: [0.0, 0.0, 1.0, 0.0],
         };
         matping.materials_length = 2.0;
     }
@@ -42,6 +42,5 @@ pub fn get_buffers<'a>(buffers: &'a mut Buffers, object_data: &SphereBlock) -> i
         MaterialBlock: &buffers.material_buffer
     };
 
-    return uniforms;
+    uniforms
 }
-

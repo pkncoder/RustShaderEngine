@@ -1,14 +1,18 @@
-use glium::uniforms::{Uniforms, UniformValue};
+use glium::uniforms::{UniformValue, Uniforms};
 
-use glium::backend::glutin::Display;
 use glium::backend::glutin::glutin::surface::WindowSurface;
+use glium::backend::glutin::Display;
+
+use crate::structs::SphereBlock;
 
 use glium::program::ShaderStage;
+
+use crate::object_tree::Node;
 
 pub struct UniformStruct {
     pub ambient_color: [f32; 3],
     pub ambient_power: f32,
-    pub shading_model: usize
+    pub shading_model: usize,
 }
 
 impl UniformStruct {
@@ -16,14 +20,17 @@ impl UniformStruct {
         UniformStruct {
             ambient_color: [1.0, 1.0, 1.0],
             ambient_power: 0.2,
-            shading_model: 0 as usize
+            shading_model: 0,
         }
     }
 
     pub const SHADING_MODELS: [&'static str; 2] = ["phong", "lambertion"];
 }
 
-pub fn get_uniforms(display: &Display<WindowSurface>, uniform_struct: &UniformStruct) -> impl Uniforms {
+pub fn get_uniforms(
+    display: &Display<WindowSurface>,
+    uniform_struct: &UniformStruct,
+) -> impl Uniforms {
     let (width, height) = display.get_framebuffer_dimensions();
 
     let uniforms = uniform! {
@@ -32,8 +39,31 @@ pub fn get_uniforms(display: &Display<WindowSurface>, uniform_struct: &UniformSt
         modelColoring: (UniformStruct::SHADING_MODELS[uniform_struct.shading_model], ShaderStage::Fragment)
     };
 
+    uniforms
+}
 
-    return uniforms;
+pub struct RenderData {
+    pub object_data: SphereBlock,
+}
+
+impl RenderData {
+    pub fn build(sphere_block: SphereBlock) -> RenderData {
+        RenderData {
+            object_data: sphere_block,
+        }
+    }
+
+    pub fn build_node_tree(&self) -> Node {
+        let mut top_node = Node::new("Top Node".to_string(), None);
+
+        for i in 0..(self.object_data.spheres_length as usize) {
+            top_node
+                .children
+                .push(Node::new(format!("Sphere {}", i).to_string(), Some(i)));
+        }
+
+        top_node
+    }
 }
 
 pub struct CombinedUniforms<U1, U2> {
@@ -44,16 +74,18 @@ pub struct CombinedUniforms<U1, U2> {
 impl<U1: Uniforms, U2: Uniforms> Uniforms for CombinedUniforms<U1, U2> {
     fn visit_values<'a, F>(&'a self, mut f: F)
     where
-        F: FnMut(&str, UniformValue<'a>)
+        F: FnMut(&str, UniformValue<'a>),
     {
         self.first.visit_values(|name, val| f(name, val));
         self.second.visit_values(|name, val| f(name, val));
     }
 }
 
-
 pub fn combine_uniforms<U1: Uniforms, U2: Uniforms>(u1: U1, u2: U2) -> CombinedUniforms<U1, U2> {
-    CombinedUniforms { first: u1, second: u2 }
+    CombinedUniforms {
+        first: u1,
+        second: u2,
+    }
 }
 
 #[macro_export]

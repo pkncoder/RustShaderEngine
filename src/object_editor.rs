@@ -1,6 +1,6 @@
-use imgui::Ui;
 use crate::structs::Sphere;
 use crate::Node;
+use imgui::Ui;
 
 pub fn draw_object_editor(
     ui: &Ui,
@@ -15,7 +15,7 @@ pub fn draw_object_editor(
                     if index < object_data.len() {
                         let sphere = &mut object_data[index];
 
-                        ui.text(format!("Editing: {}", node.name));
+                        // ui.text(format!("Editing: {}", node.name));
 
                         ui.slider("X", -10.0, 10.0, &mut sphere.origin[0]);
                         ui.slider("Y", -10.0, 10.0, &mut sphere.origin[1]);

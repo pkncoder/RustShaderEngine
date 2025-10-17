@@ -5,13 +5,12 @@ use crate::shader::Shader;
 
 use glium::{Frame, Surface};
 
-use glium::backend::glutin::Display;
 use crate::Window;
 use glium::backend::glutin::glutin::surface::WindowSurface;
+use glium::backend::glutin::Display;
 
 use glium::uniforms::Uniforms;
 use glium::DrawParameters;
-
 
 use imgui::Ui;
 
@@ -24,11 +23,10 @@ pub struct SimpleFrame {
     pub target: Option<Frame>,
 
     pub linked_mesh: Option<ScreenMesh>,
-    pub linked_shader: Option<Shader>
+    pub linked_shader: Option<Shader>,
 }
 
 impl SimpleFrame {
-
     pub fn build() -> SimpleFrame {
         SimpleFrame {
             clr_red: 1.0,
@@ -39,7 +37,7 @@ impl SimpleFrame {
             target: None,
 
             linked_mesh: None,
-            linked_shader: None
+            linked_shader: None,
         }
     }
 
@@ -58,28 +56,38 @@ impl SimpleFrame {
         self.linked_shader = Some(shader);
     }
 
-    pub fn draw<
-        U: Uniforms
-    >(
+    pub fn draw<U: Uniforms>(
         &mut self,
-        display: &Display<WindowSurface>, 
-        uniforms: &U, 
+        display: &Display<WindowSurface>,
+        uniforms: &U,
         draw_params: &DrawParameters<'_>,
         window: &Window,
         ui: &Ui,
         winit_platform: &mut imgui_winit_support::WinitPlatform,
     ) {
-
         let mut target = display.draw();
         target.clear_color(self.clr_red, self.clr_green, self.clr_blue, self.clr_alpha);
 
-        target.draw(
-            &self.linked_mesh.as_ref().expect("Screen mesh needs to be linked first before vertex buffer use.").vertex_buffer,  
-            &self.linked_mesh.as_ref().expect("Screen mesh needs to be linked first before index buffer use.").indices, 
-            &self.linked_shader.as_ref().expect("Shader needs to be linked first.").program, 
-            uniforms, 
-            draw_params
-        ).unwrap();
+        target
+            .draw(
+                &self
+                    .linked_mesh
+                    .as_ref()
+                    .expect("Screen mesh needs to be linked first before vertex buffer use.")
+                    .vertex_buffer,
+                self.linked_mesh
+                    .as_ref()
+                    .expect("Screen mesh needs to be linked first before index buffer use.")
+                    .indices,
+                &self
+                    .linked_shader
+                    .as_ref()
+                    .expect("Shader needs to be linked first.")
+                    .program,
+                uniforms,
+                draw_params,
+            )
+            .unwrap();
 
         winit_platform.prepare_render(ui, window);
 
@@ -89,10 +97,9 @@ impl SimpleFrame {
     pub fn render_imgui(
         &mut self,
         imgui_context: &mut imgui::Context,
-        renderer: &mut imgui_glium_renderer::Renderer
+        renderer: &mut imgui_glium_renderer::Renderer,
     ) {
         if let Some(mut target) = self.target.take() {
-
             let draw_data = imgui_context.render();
             renderer
                 .render(&mut target, draw_data)
@@ -102,7 +109,6 @@ impl SimpleFrame {
         } else {
             println!("Please use linkedDraw() before rendering imgui");
         }
-
     }
 
     pub fn finish(&mut self) {
@@ -111,8 +117,5 @@ impl SimpleFrame {
         } else {
             println!("Please render before finishing");
         }
-
     }
 }
-
-
