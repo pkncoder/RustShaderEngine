@@ -1,5 +1,4 @@
 HitInfo raySphere(Ray ray, Sphere sphere) {
-
     HitInfo hit;
     hit.hit = NO_HIT;
     hit.dist = 9999999999.0;
@@ -12,10 +11,9 @@ HitInfo raySphere(Ray ray, Sphere sphere) {
     float discriminant = b * b - a * c;
 
     if (discriminant > 0.0f) {
-
         float t = (-b - sqrt(discriminant)) / a;
 
-        if(t < 0.0) {
+        if (t < 0.0) {
             t = (-b + sqrt(discriminant)) / a;
         }
 
@@ -39,13 +37,13 @@ HitInfo rayScene(Ray ray) {
     HitInfo currentHit;
 
     for (int i = 0; i < spheres_length; i++) {
-      Sphere currentSphere = spheres[i];
+        Sphere currentSphere = spheres[i];
 
-      currentHit = raySphere(ray, currentSphere);
+        currentHit = raySphere(ray, currentSphere);
 
-      if (currentHit.hit == HIT && currentHit.dist < finalHit.dist) {
-        finalHit = currentHit;
-      }
+        if (currentHit.hit == HIT && currentHit.dist < finalHit.dist) {
+            finalHit = currentHit;
+        }
     }
 
     return finalHit;

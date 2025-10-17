@@ -13,13 +13,13 @@ uniform vec4 ambient;
 #include <defines.glsl>
 
 layout(std140) uniform SphereBlock {
-  Sphere spheres[10];
-  float spheres_length;
+    Sphere spheres[10];
+    float spheres_length;
 };
 
 layout(std140) uniform MaterialBlock {
-  Material materials[10];
-  float materials_length;
+    Material materials[10];
+    float materials_length;
 };
 
 #include <interceptions.glsl>
@@ -37,16 +37,16 @@ layout(std140) uniform MaterialBlock {
 #include <toneMapping.glsl>
 
 void main() {
-     vec2 uv = (fragPosition.xy * vec2(iResolution.x / iResolution.y, 1.0));
+    vec2 uv = (fragPosition.xy * vec2(iResolution.x / iResolution.y, 1.0));
 
     Ray ray = Ray(
-        vec3(0.0),
-        normalize(vec3(uv, 1.0))
-    );
+            vec3(0.0),
+            normalize(vec3(uv, 1.0))
+        );
 
     HitInfo hit = rayTrace(ray);
 
-    vec3 col = color(ray, hit); 
+    vec3 col = color(ray, hit);
 
     col = LinearToSRGB(ACESFilm(col));
 
