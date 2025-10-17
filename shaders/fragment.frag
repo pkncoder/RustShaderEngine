@@ -1,5 +1,7 @@
 #version 330 core
 
+#extension GL_ARB_shader_subroutine : require
+
 in vec2 fragPosition;
 out vec4 fragColor;
 
