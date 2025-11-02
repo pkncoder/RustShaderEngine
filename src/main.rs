@@ -69,21 +69,21 @@ fn main() {
     let mut last_frame = std::time::Instant::now();
 
     // Object building
-    let mut sphere_data = SphereBlock::default();
+    let mut object_data = ObjectBlock::default();
     {
-        sphere_data.spheres[0] = Sphere {
+        object_data.objects[0] = Sphere {
             origin: [0.0, 0.0, 5.0, 1.0],
             data: [0.0, 0.0, 0.0, 0.0],
         };
-        sphere_data.spheres[1] = Sphere {
+        object_data.objects[1] = Sphere {
             origin: [1.5, 1.5, 6.0, 0.7],
             data: [0.0, 0.0, 0.0, 1.0],
         };
-        sphere_data.spheres_length = 2.0;
+        object_data.objects_length = 2.0;
     };
 
     // Build the render data and the top object tree node
-    let mut render_data = RenderData::build(sphere_data);
+    let mut render_data = RenderData::build(object_data);
     let mut top_object_tree_node = render_data.build_node_tree();
 
     let mut selected_node_index = None;
@@ -131,7 +131,7 @@ fn main() {
                 let mut selected_node = top_object_tree_node.get_node_from_id(selected_node_index);
 
                 // Object Editor
-                draw_object_editor(ui, &mut selected_node, &mut render_data.object_data.spheres);
+                draw_object_editor(ui, &mut selected_node, &mut render_data.object_data.objects);
 
                 // Buffers building
                 let mut buffers = Buffers::build(&display);

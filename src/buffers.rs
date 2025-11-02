@@ -6,24 +6,24 @@ use glium::backend::glutin::Display;
 use crate::structs::*;
 
 pub struct Buffers {
-    sphere_buffer: UniformBuffer<SphereBlock>,
+    object_buffer: UniformBuffer<ObjectBlock>,
     material_buffer: UniformBuffer<MaterialBlock>,
 }
 
 impl Buffers {
     pub fn build(display: &Display<WindowSurface>) -> Buffers {
         Buffers {
-            sphere_buffer: UniformBuffer::<SphereBlock>::empty_immutable(display).unwrap(),
+            object_buffer: UniformBuffer::<ObjectBlock>::empty_immutable(display).unwrap(),
             material_buffer: UniformBuffer::<MaterialBlock>::empty_immutable(display).unwrap(),
         }
     }
 }
 
-pub fn get_buffers<'a>(buffers: &'a mut Buffers, object_data: &SphereBlock) -> impl Uniforms + 'a {
+pub fn get_buffers<'a>(buffers: &'a mut Buffers, object_data: &ObjectBlock) -> impl Uniforms + 'a {
     {
-        let mut mapping = buffers.sphere_buffer.map();
-        mapping.spheres = object_data.spheres;
-        mapping.spheres_length = object_data.spheres_length;
+        let mut mapping = buffers.object_buffer.map();
+        mapping.objects = object_data.objects;
+        mapping.objects_length = object_data.objects_length;
     }
 
     {
@@ -38,7 +38,7 @@ pub fn get_buffers<'a>(buffers: &'a mut Buffers, object_data: &SphereBlock) -> i
     }
 
     let uniforms = uniform! {
-        SphereBlock: &buffers.sphere_buffer,
+        ObjectBlock: &buffers.object_buffer,
         MaterialBlock: &buffers.material_buffer
     };
 

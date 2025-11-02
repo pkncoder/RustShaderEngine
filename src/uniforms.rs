@@ -3,7 +3,7 @@ use glium::uniforms::{UniformValue, Uniforms};
 use glium::backend::glutin::glutin::surface::WindowSurface;
 use glium::backend::glutin::Display;
 
-use crate::structs::SphereBlock;
+use crate::structs::ObjectBlock;
 
 use glium::program::ShaderStage;
 
@@ -43,23 +43,23 @@ pub fn get_uniforms(
 }
 
 pub struct RenderData {
-    pub object_data: SphereBlock,
+    pub object_data: ObjectBlock,
 }
 
 impl RenderData {
-    pub fn build(sphere_block: SphereBlock) -> RenderData {
+    pub fn build(object_block: ObjectBlock) -> RenderData {
         RenderData {
-            object_data: sphere_block,
+            object_data: object_block,
         }
     }
 
     pub fn build_node_tree(&self) -> Node {
-        let mut top_node = Node::new("Top Node".to_string(), None);
+        let mut top_node = Node::new("Objects".to_string(), None);
 
-        for i in 0..(self.object_data.spheres_length as usize) {
+        for i in 0..(self.object_data.objects_length as usize) {
             top_node
                 .children
-                .push(Node::new(format!("Sphere {}", i).to_string(), Some(i)));
+                .push(Node::new("Sphere".to_string(), Some(i)));
         }
 
         top_node

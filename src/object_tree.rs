@@ -6,18 +6,18 @@ pub struct Node {
     pub name: String,
     pub node_id: Uuid,
 
-    pub sphere_index: Option<usize>,
+    pub object_index: Option<usize>,
 
     pub children: Vec<Node>,
 }
 
 impl Node {
-    pub fn new(name: String, sphere_index: Option<usize>) -> Self {
+    pub fn new(name: String, object_index: Option<usize>) -> Self {
         Node {
             name,
             node_id: Uuid::new_v4(),
 
-            sphere_index,
+            object_index,
 
             children: vec![],
         }

@@ -36,8 +36,8 @@ HitInfo rayScene(Ray ray) {
 
     HitInfo currentHit;
 
-    for (int i = 0; i < spheres_length; i++) {
-        Sphere currentSphere = spheres[i];
+    for (int i = 0; i < objects_length; i++) {
+        Sphere currentSphere = objects[i];
 
         currentHit = raySphere(ray, currentSphere);
 

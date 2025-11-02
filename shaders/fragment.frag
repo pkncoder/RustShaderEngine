@@ -12,9 +12,9 @@ uniform vec4 ambient;
 #include <subroutines.glsl>
 #include <defines.glsl>
 
-layout(std140) uniform SphereBlock {
-    Sphere spheres[10];
-    float spheres_length;
+layout(std140) uniform ObjectBlock {
+    Sphere objects[10];
+    float objects_length;
 };
 
 layout(std140) uniform MaterialBlock {

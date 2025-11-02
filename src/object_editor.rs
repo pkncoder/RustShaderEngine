@@ -11,21 +11,19 @@ pub fn draw_object_editor(
         .size([300.0, 300.0], imgui::Condition::FirstUseEver)
         .build(|| {
             if let Some(node) = selected_node {
-                if let Some(index) = node.sphere_index {
+                if let Some(index) = node.object_index {
                     if index < object_data.len() {
-                        let sphere = &mut object_data[index];
+                        let object = &mut object_data[index];
 
-                        // ui.text(format!("Editing: {}", node.name));
-
-                        ui.slider("X", -10.0, 10.0, &mut sphere.origin[0]);
-                        ui.slider("Y", -10.0, 10.0, &mut sphere.origin[1]);
-                        ui.slider("Z", -10.0, 10.0, &mut sphere.origin[2]);
-                        ui.slider("Radius", 0.1, 10.0, &mut sphere.origin[3]);
+                        ui.slider("X", -10.0, 10.0, &mut object.origin[0]);
+                        ui.slider("Y", -10.0, 10.0, &mut object.origin[1]);
+                        ui.slider("Z", -10.0, 10.0, &mut object.origin[2]);
+                        ui.slider("Radius", 0.1, 10.0, &mut object.origin[3]);
                     } else {
-                        ui.text("Sphere index out of range!");
+                        ui.text("Object index out of range!");
                     }
                 } else {
-                    ui.text("This node has no sphere attached.");
+                    ui.text("This node has no object attached.");
                 }
             } else {
                 ui.text("Select a node to edit.");
