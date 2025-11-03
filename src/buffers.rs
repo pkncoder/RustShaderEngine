@@ -3,7 +3,8 @@ use glium::uniforms::{UniformBuffer, Uniforms};
 use glium::backend::glutin::glutin::surface::WindowSurface;
 use glium::backend::glutin::Display;
 
-use crate::structs::*;
+use crate::materials::*;
+use crate::objects::*;
 
 pub struct Buffers {
     object_buffer: UniformBuffer<ObjectBlock>,
@@ -34,13 +35,14 @@ pub fn get_buffers<'a>(buffers: &'a mut Buffers, object_data: &ObjectBlock) -> i
         matping.materials[1] = Material {
             color: [0.0, 0.0, 1.0, 0.0],
         };
-        matping.materials_length = 2.0;
+        matping.materials[2] = Material {
+            color: [0.0, 1.0, 0.0, 0.0],
+        };
+        matping.materials_length = 3.0;
     }
 
-    let uniforms = uniform! {
+    uniform! {
         ObjectBlock: &buffers.object_buffer,
         MaterialBlock: &buffers.material_buffer
-    };
-
-    uniforms
+    }
 }

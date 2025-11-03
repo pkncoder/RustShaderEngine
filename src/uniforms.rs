@@ -3,7 +3,7 @@ use glium::uniforms::{UniformValue, Uniforms};
 use glium::backend::glutin::glutin::surface::WindowSurface;
 use glium::backend::glutin::Display;
 
-use crate::structs::ObjectBlock;
+use crate::objects::ObjectBlock;
 
 use glium::program::ShaderStage;
 
@@ -59,7 +59,7 @@ impl RenderData {
         for i in 0..(self.object_data.objects_length as usize) {
             top_node
                 .children
-                .push(Node::new("Sphere".to_string(), Some(i)));
+                .push(Node::new(format!("Sphere {}", i).to_string(), Some(i)));
         }
 
         top_node

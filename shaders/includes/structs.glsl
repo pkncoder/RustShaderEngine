@@ -7,7 +7,7 @@ struct Material {
     vec4 color;
 };
 
-struct Sphere {
+struct Object {
     vec4 origin;
     vec4 data;
 };

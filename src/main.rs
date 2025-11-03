@@ -15,8 +15,10 @@ use simple_init::init_app;
 mod screen_mesh;
 use screen_mesh::ScreenMesh;
 
-mod structs;
-use structs::*;
+mod materials;
+
+mod objects;
+use objects::*;
 
 mod shader;
 use shader::Shader;
@@ -72,14 +74,23 @@ fn main() {
     let mut object_data = ObjectBlock::default();
     {
         object_data.objects[0] = Sphere {
-            origin: [0.0, 0.0, 5.0, 1.0],
+            origin: [0.0, 0.0, 5.0],
+            radius: 1.0,
             data: [0.0, 0.0, 0.0, 0.0],
-        };
+        }
+        .into();
         object_data.objects[1] = Sphere {
-            origin: [1.5, 1.5, 6.0, 0.7],
+            origin: [1.5, 1.5, 6.0],
+            radius: 0.7,
             data: [0.0, 0.0, 0.0, 1.0],
-        };
-        object_data.objects_length = 2.0;
+        }
+        .into();
+        object_data.objects[2] = BoxObject {
+            origin: [0.0, -2.0, 5.5, 0.5],
+            data: [1.0, 0.0, 0.0, 2.0],
+        }
+        .into();
+        object_data.objects_length = 3.0;
     };
 
     // Build the render data and the top object tree node

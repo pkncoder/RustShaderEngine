@@ -13,7 +13,7 @@ uniform vec4 ambient;
 #include <defines.glsl>
 
 layout(std140) uniform ObjectBlock {
-    Sphere objects[10];
+    Object objects[10];
     float objects_length;
 };
 

@@ -1,11 +1,11 @@
-use crate::structs::Sphere;
+use crate::objects::UniformObject;
 use crate::Node;
 use imgui::Ui;
 
 pub fn draw_object_editor(
     ui: &Ui,
     selected_node: &mut Option<&mut Node>,
-    object_data: &mut [Sphere],
+    object_data: &mut [UniformObject],
 ) {
     ui.window("Object Editor")
         .size([300.0, 300.0], imgui::Condition::FirstUseEver)
