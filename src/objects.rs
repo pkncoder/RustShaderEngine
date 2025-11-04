@@ -30,7 +30,7 @@ impl ObjectType {
 }
 
 pub trait Object: IntoUniform {
-    fn get_object_type(&self) -> f32;
+    fn get_object_type(&self) -> ObjectType;
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -41,8 +41,8 @@ pub struct Sphere {
 }
 
 impl Object for Sphere {
-    fn get_object_type(&self) -> f32 {
-        self.data[0]
+    fn get_object_type(&self) -> ObjectType {
+        self.data[0].into()
     }
 }
 
@@ -67,8 +67,8 @@ pub struct BoxObject {
 }
 
 impl Object for BoxObject {
-    fn get_object_type(&self) -> f32 {
-        self.data[0]
+    fn get_object_type(&self) -> ObjectType {
+        self.data[0].into()
     }
 }
 
@@ -88,8 +88,8 @@ pub struct UniformObject {
     pub data: [f32; 4],
 }
 impl Object for UniformObject {
-    fn get_object_type(&self) -> f32 {
-        self.data[0]
+    fn get_object_type(&self) -> ObjectType {
+        self.data[0].into()
     }
 }
 

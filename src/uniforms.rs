@@ -57,7 +57,7 @@ impl RenderData {
         let mut top_node = Node::new("Objects".to_string(), None);
 
         for i in 0..(self.object_data.objects_length as usize) {
-            let object_type = ObjectType::from(self.object_data.objects[i].get_object_type());
+            let object_type = self.object_data.objects[i].get_object_type();
 
             top_node
                 .children
