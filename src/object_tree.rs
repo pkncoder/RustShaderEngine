@@ -39,7 +39,8 @@ impl Node {
         ui.window("Objects")
             .size([300.0, 300.0], imgui::Condition::FirstUseEver)
             .build(|| {
-                let is_open = ui.tree_node_config(&node.name).flags(flags).build(|| {});
+                let label = format!("{}##{}", node.name, node.node_id);
+                let is_open = ui.tree_node_config(label).flags(flags).build(|| {});
 
                 let rect_min = ui.item_rect_min();
 

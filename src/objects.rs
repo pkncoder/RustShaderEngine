@@ -4,6 +4,31 @@ pub trait IntoUniform: From<Self> {}
 
 impl<T> IntoUniform for T where T: From<T> {}
 
+#[derive(Debug)]
+pub enum ObjectType {
+    Sphere(String),
+    Box(String),
+}
+
+impl From<f32> for ObjectType {
+    fn from(value: f32) -> Self {
+        match value {
+            0.0 => ObjectType::Sphere("Sphere".to_string()),
+            1.0 => ObjectType::Box("Box".to_string()),
+            _ => ObjectType::Sphere("Unknown".to_string()),
+        }
+    }
+}
+
+impl ObjectType {
+    pub fn descriptor(&self) -> &str {
+        match self {
+            ObjectType::Sphere(desc) => desc,
+            ObjectType::Box(desc) => desc,
+        }
+    }
+}
+
 pub trait Object: IntoUniform {
     fn get_object_type(&self) -> f32;
 }
