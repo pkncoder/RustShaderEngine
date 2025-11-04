@@ -3,7 +3,7 @@ use glium::uniforms::{UniformValue, Uniforms};
 use glium::backend::glutin::glutin::surface::WindowSurface;
 use glium::backend::glutin::Display;
 
-use crate::objects::{ObjectBlock, ObjectType};
+use crate::objects::{Object, ObjectBlock, ObjectType};
 
 use glium::program::ShaderStage;
 
@@ -57,7 +57,7 @@ impl RenderData {
         let mut top_node = Node::new("Objects".to_string(), None);
 
         for i in 0..(self.object_data.objects_length as usize) {
-            let object_type = ObjectType::from(self.object_data.objects[i].data[0]);
+            let object_type = ObjectType::from(self.object_data.objects[i].get_object_type());
 
             top_node
                 .children
