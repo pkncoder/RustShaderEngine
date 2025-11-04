@@ -9,6 +9,8 @@ use glium::backend::{
     winit::window::Window,
 };
 
+use imgui::*;
+
 mod simple_init;
 use simple_init::init_app;
 
@@ -35,11 +37,9 @@ use buffers::{get_buffers, Buffers};
 mod object_tree;
 use object_tree::Node;
 
-mod object_editor;
-use object_editor::draw_object_editor;
-
-mod renderer_editor;
-use renderer_editor::draw_renderer_editor;
+mod editors;
+use editors::object_editor::draw_object_editor;
+use editors::renderer_editor::draw_renderer_editor;
 
 fn main() {
     /* Initializations and building */

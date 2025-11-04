@@ -4,7 +4,9 @@ use uuid::Uuid;
 #[derive(PartialEq)]
 pub struct Node {
     pub name: String,
+
     pub node_id: Uuid,
+    pub default_open: bool,
 
     pub object_index: Option<usize>,
 
@@ -12,10 +14,12 @@ pub struct Node {
 }
 
 impl Node {
-    pub fn new(name: String, object_index: Option<usize>) -> Self {
+    pub fn new(name: String, default_open: bool, object_index: Option<usize>) -> Self {
         Node {
             name,
+
             node_id: Uuid::new_v4(),
+            default_open,
 
             object_index,
 
@@ -32,12 +36,17 @@ impl Node {
             | TreeNodeFlags::SPAN_AVAIL_WIDTH
             | TreeNodeFlags::NO_TREE_PUSH_ON_OPEN;
 
+        if node.default_open {
+            flags |= TreeNodeFlags::DEFAULT_OPEN;
+        }
+
         if selected_node_index.is_some() && node.node_id == selected_node_index.unwrap() {
             flags |= TreeNodeFlags::SELECTED;
         }
 
         ui.window("Objects")
             .size([300.0, 300.0], imgui::Condition::FirstUseEver)
+            .position([20.0, 130.0], imgui::Condition::Always)
             .build(|| {
                 let label = format!("{}##{}", node.name, node.node_id);
                 let is_open = ui.tree_node_config(label).flags(flags).build(|| {});

@@ -54,14 +54,16 @@ impl RenderData {
     }
 
     pub fn build_node_tree(&self) -> Node {
-        let mut top_node = Node::new("Objects".to_string(), None);
+        let mut top_node = Node::new("Objects".to_string(), true, None);
 
         for i in 0..(self.object_data.objects_length as usize) {
             let object_type = self.object_data.objects[i].get_object_type();
 
-            top_node
-                .children
-                .push(Node::new(object_type.descriptor().to_string(), Some(i)));
+            top_node.children.push(Node::new(
+                object_type.descriptor().to_string(),
+                false,
+                Some(i),
+            ));
         }
 
         top_node

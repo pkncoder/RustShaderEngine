@@ -9,6 +9,7 @@ pub fn draw_object_editor(
 ) {
     ui.window("Object Editor")
         .size([300.0, 300.0], imgui::Condition::FirstUseEver)
+        .position([20.0, 450.0], imgui::Condition::Always)
         .build(|| {
             if let Some(node) = selected_node {
                 if let Some(index) = node.object_index {
