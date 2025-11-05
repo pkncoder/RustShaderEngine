@@ -1,13 +1,17 @@
-use crate::structs::{node::Node, object::Object, object_block::ObjectBlock};
+use crate::structs::{
+    material_block::MaterialBlock, node::Node, object::Object, object_block::ObjectBlock,
+};
 
 pub struct RenderData {
     pub object_data: ObjectBlock,
+    pub material_data: MaterialBlock,
 }
 
 impl RenderData {
-    pub fn build(object_block: ObjectBlock) -> RenderData {
+    pub fn build(object_block: ObjectBlock, material_block: MaterialBlock) -> RenderData {
         RenderData {
             object_data: object_block,
+            material_data: material_block,
         }
     }
 

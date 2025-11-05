@@ -38,6 +38,8 @@ use buffers::{get_buffers, Buffers};
 use editors::object_editor::draw_object_editor;
 use editors::renderer_editor::draw_renderer_editor;
 
+use crate::structs::{material::Material, material_block::MaterialBlock};
+
 fn main() {
     /* Initializations and building */
 
@@ -97,8 +99,25 @@ fn main() {
         object_data.objects_length = 4.0;
     };
 
+    let mut material_data = MaterialBlock::default();
+    {
+        material_data.materials[0] = Material {
+            color: [1.0, 0.0, 0.0, 0.0],
+        };
+        material_data.materials[1] = Material {
+            color: [0.0, 0.0, 1.0, 0.0],
+        };
+        material_data.materials[2] = Material {
+            color: [0.0, 1.0, 0.0, 0.0],
+        };
+        material_data.materials[3] = Material {
+            color: [0.0, 1.0, 1.0, 0.0],
+        };
+        material_data.materials_length = 3.0;
+    }
+
     // Build the render data and the top object tree node
-    let mut render_data = RenderData::build(object_data);
+    let mut render_data = RenderData::build(object_data, material_data);
     let mut top_object_tree_node = render_data.build_node_tree();
 
     let mut selected_node_index = None;
@@ -153,7 +172,11 @@ fn main() {
 
                 // Create the uniform buffer and the buffer's buffer
                 let uniform_buffer = uniforms.get_uniforms(&display);
-                let buffers_buffer = get_buffers(&mut buffers, &render_data.object_data);
+                let buffers_buffer = get_buffers(
+                    &mut buffers,
+                    &render_data.object_data,
+                    &render_data.material_data,
+                );
 
                 // Append the two uniforms together to get the new uniform buffer
                 let new_uniform_buffer = append_uniforms!(uniform_buffer, buffers_buffer);

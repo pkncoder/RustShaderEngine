@@ -19,7 +19,7 @@ pub fn draw_object_editor(
                         ui.slider("X", -10.0, 10.0, &mut object.location1[0]);
                         ui.slider("Y", -10.0, 10.0, &mut object.location1[1]);
                         ui.slider("Z", -10.0, 10.0, &mut object.location1[2]);
-                        ui.slider("Radius", 0.1, 10.0, &mut object.location1[3]);
+                        ui.slider("Radius", 0.1, 10.0, &mut object.location2[0]);
                     } else {
                         ui.text("Object index out of range!");
                     }
