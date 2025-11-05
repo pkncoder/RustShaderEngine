@@ -25,6 +25,6 @@ pub fn combine_uniforms<U1: Uniforms, U2: Uniforms>(u1: U1, u2: U2) -> CombinedU
 #[macro_export]
 macro_rules! append_uniforms {
     ($a:expr, $b:expr) => {
-        $crate::structs::combined_uniforms::combine_uniforms($a, $b)
+        $crate::structs::uniforms::combined_uniforms::combine_uniforms($a, $b)
     };
 }

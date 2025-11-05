@@ -25,10 +25,13 @@ use screen_mesh::ScreenMesh;
 use shader::Shader;
 
 use structs::renderer_data::RenderData;
-use structs::uniforms::UniformStruct;
+use structs::uniforms::uniform_struct::UniformStruct;
 
 use structs::{
-    box_object::BoxObject, object_block::ObjectBlock, sphere::Sphere, triangle::Triangle,
+    materials::{material::Material, material_block::MaterialBlock},
+    objects::{
+        box_object::BoxObject, object_block::ObjectBlock, sphere::Sphere, triangle::Triangle,
+    },
 };
 
 use structs::node::Node;
@@ -37,8 +40,6 @@ use buffers::{get_buffers, Buffers};
 
 use editors::object_editor::draw_object_editor;
 use editors::renderer_editor::draw_renderer_editor;
-
-use crate::structs::{material::Material, material_block::MaterialBlock};
 
 fn main() {
     /* Initializations and building */

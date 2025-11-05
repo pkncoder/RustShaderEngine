@@ -1,5 +1,5 @@
 use crate::enums::object_type::ObjectType;
-use crate::structs::object::Object;
+use crate::structs::objects::object::Object;
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]

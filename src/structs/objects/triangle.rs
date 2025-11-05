@@ -1,6 +1,6 @@
 use crate::enums::object_type::ObjectType;
-use crate::structs::object::Object;
-use crate::structs::uniform_object::UniformObject;
+use crate::structs::objects::object::Object;
+use crate::structs::uniforms::uniform_object::UniformObject;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Triangle {

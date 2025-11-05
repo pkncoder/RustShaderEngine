@@ -1,4 +1,4 @@
-use crate::structs::uniform_object::UniformObject;
+use crate::structs::uniforms::uniform_object::UniformObject;
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]

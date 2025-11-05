@@ -1,5 +1,7 @@
 use crate::structs::{
-    material_block::MaterialBlock, node::Node, object::Object, object_block::ObjectBlock,
+    materials::material_block::MaterialBlock,
+    node::Node,
+    objects::{object::Object, object_block::ObjectBlock},
 };
 
 pub struct RenderData {

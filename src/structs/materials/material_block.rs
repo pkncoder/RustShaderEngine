@@ -1,4 +1,4 @@
-use crate::structs::material::Material;
+use crate::structs::materials::material::Material;
 
 #[repr(C)]
 #[derive(Copy, Clone, Debug)]
