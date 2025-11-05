@@ -9,36 +9,32 @@ use glium::backend::{
     winit::window::Window,
 };
 
+mod buffers;
+mod editors;
+mod enums;
+mod frames;
+mod screen_mesh;
+mod shader;
 mod simple_init;
+mod structs;
+
+use frames::SimpleFrame;
 use simple_init::init_app;
 
-mod screen_mesh;
 use screen_mesh::ScreenMesh;
+use shader::Shader;
 
-mod enums;
-mod materials;
-mod structs;
+use structs::renderer_data::RenderData;
+use structs::uniforms::UniformStruct;
 
 use structs::{
     box_object::BoxObject, object_block::ObjectBlock, sphere::Sphere, triangle::Triangle,
 };
 
-mod shader;
-use shader::Shader;
+use structs::node::Node;
 
-mod frames;
-use frames::SimpleFrame;
-
-mod uniforms;
-use uniforms::{get_uniforms, RenderData, UniformStruct};
-
-mod buffers;
 use buffers::{get_buffers, Buffers};
 
-mod object_tree;
-use object_tree::Node;
-
-mod editors;
 use editors::object_editor::draw_object_editor;
 use editors::renderer_editor::draw_renderer_editor;
 
@@ -156,7 +152,7 @@ fn main() {
                 let mut buffers = Buffers::build(&display);
 
                 // Create the uniform buffer and the buffer's buffer
-                let uniform_buffer = get_uniforms(&display, &uniforms);
+                let uniform_buffer = uniforms.get_uniforms(&display);
                 let buffers_buffer = get_buffers(&mut buffers, &render_data.object_data);
 
                 // Append the two uniforms together to get the new uniform buffer

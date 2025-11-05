@@ -1,6 +1,12 @@
 pub mod box_object;
+pub mod combined_uniforms;
+pub mod material;
+pub mod material_block;
+pub mod node;
 pub mod object;
 pub mod object_block;
+pub mod renderer_data;
 pub mod sphere;
 pub mod triangle;
 pub mod uniform_object;
+pub mod uniforms;

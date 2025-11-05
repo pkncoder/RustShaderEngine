@@ -1,5 +1,5 @@
+use crate::structs::node::Node;
 use crate::structs::uniform_object::UniformObject;
-use crate::Node;
 use imgui::Ui;
 
 pub fn draw_object_editor(
