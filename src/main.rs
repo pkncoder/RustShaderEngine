@@ -10,6 +10,7 @@ use glium::backend::{
 };
 
 mod buffers;
+mod builders;
 mod editors;
 mod enums;
 mod frames;
@@ -27,19 +28,14 @@ use shader::Shader;
 use structs::renderer_data::RenderData;
 use structs::uniforms::uniform_struct::UniformStruct;
 
-use structs::{
-    materials::{material::Material, material_block::MaterialBlock},
-    objects::{
-        box_object::BoxObject, object_block::ObjectBlock, sphere::Sphere, triangle::Triangle,
-    },
-};
-
 use structs::node::Node;
 
 use buffers::{get_buffers, Buffers};
 
-use editors::object_editor::draw_object_editor;
+use editors::object_editors::object_editor::draw_object_editor;
 use editors::renderer_editor::draw_renderer_editor;
+
+use crate::builders::scene_builder::scene_builder;
 
 fn main() {
     /* Initializations and building */
@@ -71,51 +67,7 @@ fn main() {
     let mut last_frame = std::time::Instant::now();
 
     // Object building
-    let mut object_data = ObjectBlock::default();
-    {
-        object_data.objects[0] = Sphere {
-            origin: [0.0, 0.0, 5.0],
-            radius: 1.0,
-            data: [0.0, 0.0, 0.0, 0.0],
-        }
-        .into();
-        object_data.objects[1] = Sphere {
-            origin: [1.5, 1.5, 6.0],
-            radius: 0.7,
-            data: [0.0, 0.0, 0.0, 1.0],
-        }
-        .into();
-        object_data.objects[2] = BoxObject {
-            origin: [0.0, -2.0, 5.5, 0.5],
-            data: [1.0, 0.0, 0.0, 2.0],
-        }
-        .into();
-        object_data.objects[3] = Triangle {
-            vert1: [2.0, 2.0, 5.0, 0.0],
-            vert2: [3.5, 1.0, 4.0, 0.0],
-            vert3: [3.0, -2.0, 5.5, 0.0],
-            data: [2.0, 0.0, 0.0, 3.0],
-        }
-        .into();
-        object_data.objects_length = 4.0;
-    };
-
-    let mut material_data = MaterialBlock::default();
-    {
-        material_data.materials[0] = Material {
-            color: [1.0, 0.0, 0.0, 0.0],
-        };
-        material_data.materials[1] = Material {
-            color: [0.0, 0.0, 1.0, 0.0],
-        };
-        material_data.materials[2] = Material {
-            color: [0.0, 1.0, 0.0, 0.0],
-        };
-        material_data.materials[3] = Material {
-            color: [0.0, 1.0, 1.0, 0.0],
-        };
-        material_data.materials_length = 3.0;
-    }
+    let (object_data, material_data) = scene_builder();
 
     // Build the render data and the top object tree node
     let mut render_data = RenderData::build(object_data, material_data);
