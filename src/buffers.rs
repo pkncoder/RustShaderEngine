@@ -38,6 +38,9 @@ pub fn get_buffers<'a>(buffers: &'a mut Buffers, object_data: &ObjectBlock) -> i
         matping.materials[2] = Material {
             color: [0.0, 1.0, 0.0, 0.0],
         };
+        matping.materials[3] = Material {
+            color: [0.0, 1.0, 1.0, 0.0],
+        };
         matping.materials_length = 3.0;
     }
 

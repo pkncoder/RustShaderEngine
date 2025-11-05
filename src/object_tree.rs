@@ -46,7 +46,7 @@ impl Node {
 
         ui.window("Objects")
             .size([300.0, 300.0], imgui::Condition::FirstUseEver)
-            .position([20.0, 130.0], imgui::Condition::Always)
+            .position([20.0, 130.0], imgui::Condition::Appearing)
             .build(|| {
                 let label = format!("{}##{}", node.name, node.node_id);
                 let is_open = ui.tree_node_config(label).flags(flags).build(|| {});

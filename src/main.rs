@@ -9,8 +9,6 @@ use glium::backend::{
     winit::window::Window,
 };
 
-use imgui::*;
-
 mod simple_init;
 use simple_init::init_app;
 
@@ -90,7 +88,14 @@ fn main() {
             data: [1.0, 0.0, 0.0, 2.0],
         }
         .into();
-        object_data.objects_length = 3.0;
+        object_data.objects[3] = Triangle {
+            vert1: [2.0, 2.0, 5.0, 0.0],
+            vert2: [3.5, 1.0, 4.0, 0.0],
+            vert3: [3.0, -2.0, 5.5, 0.0],
+            data: [2.0, 0.0, 0.0, 3.0],
+        }
+        .into();
+        object_data.objects_length = 4.0;
     };
 
     // Build the render data and the top object tree node

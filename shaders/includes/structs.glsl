@@ -8,7 +8,10 @@ struct Material {
 };
 
 struct Object {
-    vec4 origin;
+    vec4 location1;
+    vec4 location2;
+    vec4 location3;
+    vec4 location4;
     vec4 data;
 };
 
