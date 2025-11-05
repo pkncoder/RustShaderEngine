@@ -4,7 +4,7 @@ use glium::backend::glutin::glutin::surface::WindowSurface;
 use glium::backend::glutin::Display;
 
 use crate::materials::*;
-use crate::objects::*;
+use crate::structs::object_block::ObjectBlock;
 
 pub struct Buffers {
     object_buffer: UniformBuffer<ObjectBlock>,

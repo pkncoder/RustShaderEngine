@@ -15,10 +15,13 @@ use simple_init::init_app;
 mod screen_mesh;
 use screen_mesh::ScreenMesh;
 
+mod enums;
 mod materials;
+mod structs;
 
-mod objects;
-use objects::*;
+use structs::{
+    box_object::BoxObject, object_block::ObjectBlock, sphere::Sphere, triangle::Triangle,
+};
 
 mod shader;
 use shader::Shader;

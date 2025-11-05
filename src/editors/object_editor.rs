@@ -1,4 +1,4 @@
-use crate::objects::UniformObject;
+use crate::structs::uniform_object::UniformObject;
 use crate::Node;
 use imgui::Ui;
 

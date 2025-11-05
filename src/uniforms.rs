@@ -3,7 +3,7 @@ use glium::uniforms::{UniformValue, Uniforms};
 use glium::backend::glutin::glutin::surface::WindowSurface;
 use glium::backend::glutin::Display;
 
-use crate::objects::{Object, ObjectBlock};
+use crate::structs::{object::Object, object_block::ObjectBlock};
 
 use glium::program::ShaderStage;
 
