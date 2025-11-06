@@ -2,6 +2,7 @@ use crate::structs::objects::{
     box_object::BoxObject, object_block::ObjectBlock, sphere::Sphere, triangle::Triangle,
 };
 
+#[allow(dead_code)]
 pub fn object_block_builder() -> ObjectBlock {
     let mut object_block = ObjectBlock::default();
 

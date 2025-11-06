@@ -1,5 +1,6 @@
 use crate::structs::materials::{material::Material, material_block::MaterialBlock};
 
+#[allow(dead_code)]
 pub fn material_block_builder() -> MaterialBlock {
     let mut material_block = MaterialBlock::default();
 

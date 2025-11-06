@@ -1,7 +1,8 @@
 use crate::structs::uniforms::uniform_object::UniformObject;
+use serde::{Deserialize, Serialize};
 
 #[repr(C)]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Serialize, Deserialize)]
 pub struct ObjectBlock {
     pub objects: [UniformObject; 10],
     pub objects_length: f32,

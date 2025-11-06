@@ -66,11 +66,25 @@ fn main() {
     // Frametime
     let mut last_frame = std::time::Instant::now();
 
+    // let tempObjBlock = object_block_builder();
+    // let tempMatBlock = material_block_builder();
+    // let tempSceneBlock = SceneBlock {
+    //     object_block: tempObjBlock,
+    //     material_block: tempMatBlock,
+    // };
+    //
+    // serde_json::to_writer_pretty(
+    //     File::create("./scenes/objects.json").unwrap(),
+    //     &tempSceneBlock,
+    // );
+
     // Object building
-    let (object_data, material_data) = scene_builder();
+    let scene_block = scene_builder();
+    let object_block = scene_block.object_block;
+    let material_block = scene_block.material_block;
 
     // Build the render data and the top object tree node
-    let mut render_data = RenderData::build(object_data, material_data);
+    let mut render_data = RenderData::build(object_block, material_block);
     let mut top_object_tree_node = render_data.build_node_tree();
 
     let mut selected_node_index = None;
@@ -154,7 +168,9 @@ fn main() {
                 // Window event (quit)
                 event: WindowEvent::CloseRequested,
                 ..
-            } => window_target.exit(),
+            } => {
+                window_target.exit();
+            }
             winit::event::Event::WindowEvent {
                 // Window event (resize)
                 event: winit::event::WindowEvent::Resized(new_size),

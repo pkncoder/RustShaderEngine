@@ -1,13 +1,17 @@
-use crate::{
-    builders::{
-        material_block_builder::material_block_builder, object_block_builder::object_block_builder,
-    },
-    structs::{materials::material_block::MaterialBlock, objects::object_block::ObjectBlock},
-};
+use std::fs;
 
-pub fn scene_builder() -> (ObjectBlock, MaterialBlock) {
-    let object_block = object_block_builder();
-    let material_block = material_block_builder();
+use crate::structs::scenes::scene_block::SceneBlock;
 
-    (object_block, material_block)
+pub fn scene_builder() -> SceneBlock {
+    let scene_block: SceneBlock = serde_json::from_str(
+        fs::read_to_string("./scenes/objects.json")
+            .unwrap()
+            .as_str(),
+    )
+    .unwrap();
+
+    // let object_block = object_block_builder();
+    // let material_block = material_block_builder();
+
+    scene_block
 }

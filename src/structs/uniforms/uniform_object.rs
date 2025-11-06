@@ -1,8 +1,9 @@
 use crate::enums::object_type::ObjectType;
 use crate::structs::objects::object::Object;
+use serde::{Deserialize, Serialize};
 
 #[repr(C)]
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Serialize, Deserialize)]
 pub struct UniformObject {
     pub location1: [f32; 4],
     pub location2: [f32; 4],
