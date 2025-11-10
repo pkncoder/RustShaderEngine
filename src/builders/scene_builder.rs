@@ -4,7 +4,7 @@ use crate::structs::scenes::scene_block::SceneBlock;
 
 pub fn scene_builder() -> SceneBlock {
     let scene_block: SceneBlock = serde_json::from_str(
-        fs::read_to_string("./scenes/objects.json")
+        fs::read_to_string("./scenes/cube_mesh.json")
             .unwrap()
             .as_str(),
     )

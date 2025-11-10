@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[repr(C)]
+#[repr(C, align(16))]
 #[derive(Copy, Clone, Debug, Serialize, Deserialize)]
 pub struct Material {
     pub color: [f32; 4],

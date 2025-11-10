@@ -125,7 +125,7 @@ HitInfo rayScene(Ray ray) {
     HitInfo currentHit;
 
     for (int i = 0; i < objects_length; i++) {
-        Object currentObject = objects[i];
+        Object currentObject = fetchObject(i);
 
         if (currentObject.data[0] == 0.0) {
             currentHit = raySphere(ray, currentObject);

@@ -1,12 +1,16 @@
-#![allow(unused_assignments)]
-
 #[macro_use]
 extern crate glium;
 
-use glium::backend::{
-    winit,
-    winit::event::{Event, WindowEvent},
-    winit::window::Window,
+use std::fs::File;
+
+use glium::{
+    backend::winit::{
+        self,
+        event::{Event, WindowEvent},
+        window::Window,
+    },
+    texture::buffer_texture::{BufferTexture, BufferTextureType},
+    uniforms::UniformBuffer,
 };
 
 mod buffers;
@@ -30,12 +34,18 @@ use structs::uniforms::uniform_struct::UniformStruct;
 
 use structs::node::Node;
 
-use buffers::{get_buffers, Buffers};
+use buffers::Buffers;
 
 use editors::object_editors::object_editor::draw_object_editor;
 use editors::renderer_editor::draw_renderer_editor;
 
-use crate::builders::scene_builder::scene_builder;
+use crate::{
+    builders::{
+        material_block_builder::material_block_builder, object_block_builder::object_block_builder,
+        scene_builder::scene_builder,
+    },
+    structs::{scenes::scene_block::SceneBlock, uniforms::combined_uniforms::combine_uniforms},
+};
 
 fn main() {
     /* Initializations and building */
@@ -62,6 +72,7 @@ fn main() {
 
     // Build the uniforms
     let mut uniforms = UniformStruct::build();
+    let mut frame_num = 0.0;
 
     // Frametime
     let mut last_frame = std::time::Instant::now();
@@ -74,7 +85,7 @@ fn main() {
     // };
     //
     // serde_json::to_writer_pretty(
-    //     File::create("./scenes/objects.json").unwrap(),
+    //     File::create("./scenes/cube_mesh.json").unwrap(),
     //     &tempSceneBlock,
     // );
 
@@ -88,6 +99,19 @@ fn main() {
     let mut top_object_tree_node = render_data.build_node_tree();
 
     let mut selected_node_index = None;
+
+    let object_vec: Vec<[f32; 4]> = object_block
+        .get_object_vec()
+        .chunks_exact(4)
+        .map(|c| [c[0], c[1], c[2], c[3]])
+        .collect();
+
+    let mut object_texture_buffer =
+        BufferTexture::new(&display, &object_vec, BufferTextureType::Float).unwrap();
+
+    let mut material_block = scene_block.material_block;
+
+    let mut material_buffer = UniformBuffer::new(&display, material_block).unwrap();
 
     /* Event loop */
 
@@ -114,16 +138,23 @@ fn main() {
                 event: WindowEvent::RedrawRequested,
                 ..
             } => {
-                // Create a new UI
+                // Update uniforms per frame
+                uniforms.set_time(frame_num);
+
+                // // (Optional) If your object data changes, update the TBO
+                // if object_data_changed {
+                //     println!("Updating TBO...");
+                //     object_vec = updated_object_vec();
+                //     object_texture_buffer =
+                //         BufferTexture::new(&display, &object_vec, BufferTextureType::Float).unwrap();
+                // }
+
+                // Create UI frame
                 let ui = imgui_context.frame();
 
-                // UI demo window
-                // ui.show_demo_window(&mut true);
-
-                // UI imgui_renderer editor
+                // Draw UI
                 draw_renderer_editor(ui, &mut uniforms);
 
-                // UI object tree
                 selected_node_index = Node::draw_selectable_tree(
                     ui,
                     &mut top_object_tree_node,
@@ -131,24 +162,24 @@ fn main() {
                 );
                 let mut selected_node = top_object_tree_node.get_node_from_id(selected_node_index);
 
-                // Object Editor
+                // Object editor modifies your CPU-side data
                 draw_object_editor(ui, &mut selected_node, &mut render_data.object_data.objects);
 
-                // Buffers building
-                let mut buffers = Buffers::build(&display);
+                let nuniform_buffer = uniforms.get_uniforms(&display);
+                material_buffer = UniformBuffer::new(&display, material_block).unwrap();
 
-                // Create the uniform buffer and the buffer's buffer
-                let uniform_buffer = uniforms.get_uniforms(&display);
-                let buffers_buffer = get_buffers(
-                    &mut buffers,
-                    &render_data.object_data,
-                    &render_data.material_data,
+                let new_uniform_buffer = combine_uniforms(
+                    nuniform_buffer,
+                    uniform! {
+                        objects: &object_texture_buffer,
+                        objects_length: 10.0f32,
+                        MaterialBlock: &material_buffer,
+                    },
                 );
 
-                // Append the two uniforms together to get the new uniform buffer
-                let new_uniform_buffer = append_uniforms!(uniform_buffer, buffers_buffer);
-
-                // Draw the frame
+                // --------------------------------------------------------
+                // DRAW FRAME
+                // --------------------------------------------------------
                 frame.draw(
                     &display,
                     &new_uniform_buffer,
@@ -158,11 +189,13 @@ fn main() {
                     &mut winit_platform,
                 );
 
-                // Render imgui ontop of the frame
+                // Render imgui overlay
                 frame.render_imgui(&mut imgui_context, &mut imgui_renderer);
 
-                // Mark frame as complete
+                // Finish frame
                 frame.finish();
+
+                frame_num += 1.0;
             }
             Event::WindowEvent {
                 // Window event (quit)
