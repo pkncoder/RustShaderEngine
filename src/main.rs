@@ -95,12 +95,12 @@ fn main() {
     let material_block = scene_block.material_block;
 
     // Build the render data and the top object tree node
-    let mut render_data = RenderData::build(object_block, material_block);
-    let mut top_object_tree_node = render_data.build_node_tree();
+    let mut render_data = RenderData::build(scene_block);
+    let mut top_object_tree_node = Node::build_node_tree(&render_data);
 
     let mut selected_node_index = None;
 
-    let object_vec: Vec<[f32; 4]> = object_block
+    let mut object_vec: Vec<[f32; 4]> = object_block
         .get_object_vec()
         .chunks_exact(4)
         .map(|c| [c[0], c[1], c[2], c[3]])
@@ -141,13 +141,18 @@ fn main() {
                 // Update uniforms per frame
                 uniforms.set_time(frame_num);
 
-                // // (Optional) If your object data changes, update the TBO
-                // if object_data_changed {
-                //     println!("Updating TBO...");
-                //     object_vec = updated_object_vec();
-                //     object_texture_buffer =
-                //         BufferTexture::new(&display, &object_vec, BufferTextureType::Float).unwrap();
-                // }
+                // (Optional) If your object data changes, update the TBO
+                if true {
+                    println!("Updating TBO...");
+                    object_vec = render_data
+                        .scene_block
+                        .object_block
+                        .get_object_vec()
+                        .chunks_exact(4)
+                        .map(|c| [c[0], c[1], c[2], c[3]])
+                        .collect();
+                    object_texture_buffer.write(&object_vec);
+                }
 
                 // Create UI frame
                 let ui = imgui_context.frame();
@@ -163,7 +168,11 @@ fn main() {
                 let mut selected_node = top_object_tree_node.get_node_from_id(selected_node_index);
 
                 // Object editor modifies your CPU-side data
-                draw_object_editor(ui, &mut selected_node, &mut render_data.object_data.objects);
+                draw_object_editor(
+                    ui,
+                    &mut selected_node,
+                    &mut render_data.scene_block.object_block.objects,
+                );
 
                 let nuniform_buffer = uniforms.get_uniforms(&display);
                 material_buffer = UniformBuffer::new(&display, material_block).unwrap();

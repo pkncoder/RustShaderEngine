@@ -1,3 +1,4 @@
+use crate::structs::renderer_data::RenderData;
 use imgui::{MouseButton, TreeNodeFlags, Ui};
 use uuid::Uuid;
 
@@ -25,6 +26,22 @@ impl Node {
 
             children: vec![],
         }
+    }
+
+    pub fn build_node_tree(renderer_data: &RenderData) -> Node {
+        let mut top_node = Node::new("Objects".to_string(), true, None);
+
+        for i in 0..(renderer_data.scene_block.object_block.objects_length as usize) {
+            let object_type = renderer_data.scene_block.object_block.objects[i].get_object_type();
+
+            top_node.children.push(Node::new(
+                object_type.descriptor().to_string(),
+                false,
+                Some(i),
+            ));
+        }
+
+        top_node
     }
 
     pub fn draw_selectable_tree(
