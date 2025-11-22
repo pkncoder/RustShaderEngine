@@ -20,7 +20,7 @@ mod screen_mesh;
 mod shader;
 mod structs;
 
-use structs::renderer_data::RenderData;
+use structs::render::render_data::RenderData;
 use structs::uniforms::uniform_struct::UniformStruct;
 
 use structs::node::Node;
@@ -28,13 +28,11 @@ use structs::node::Node;
 use editors::object_editors::object_editor::draw_object_editor;
 use editors::renderer_editor::draw_renderer_editor;
 
-use crate::{
-    builders::scene_builder::scene_builder,
-    structs::{
-        imgui::imgui_data::ImGuiData,
-        opengl::{opengl_configuration::OpenGLConfiguration, opengl_data::OpenGLData},
-        uniforms::combined_uniforms::combine_uniforms,
-    },
+use crate::structs::{
+    imgui::imgui_data::ImGuiData,
+    opengl::{opengl_configuration::OpenGLConfiguration, opengl_data::OpenGLData},
+    render::render_data_configuration::RenderDataConfiguration,
+    uniforms::combined_uniforms::combine_uniforms,
 };
 
 fn main() {
@@ -49,6 +47,10 @@ fn main() {
     let mut opengl_data = OpenGLData::build(opengl_configuration);
     let mut imgui_data = ImGuiData::build(&opengl_data.window, &opengl_data.display);
 
+    let render_data_configuration =
+        RenderDataConfiguration::build("./scenes/cube_mesh.json".to_string());
+
+    let mut render_data = RenderData::build(render_data_configuration);
     /* UNIFORMS */
 
     // Build the uniforms
@@ -58,24 +60,10 @@ fn main() {
     // Frametime
     let mut last_frame = std::time::Instant::now();
 
-    // let tempObjBlock = object_block_builder();
-    // let tempMatBlock = material_block_builder();
-    // let tempSceneBlock = SceneBlock {
-    //     object_block: tempObjBlock,
-    //     material_block: tempMatBlock,
-    // };
-    //
-    // serde_json::to_writer_pretty(
-    //     File::create("./scenes/cube_mesh.json").unwrap(),
-    //     &tempSceneBlock,
-    // );
-
     // Object building
-    let scene_block = scene_builder();
-    let object_block = scene_block.object_block;
+    let object_block = render_data.scene_block.object_block;
 
     // Build the render data and the top object tree node
-    let mut render_data = RenderData::build(scene_block);
     let mut top_object_tree_node = Node::build_node_tree(&render_data);
 
     let mut selected_node_index = None;
@@ -94,7 +82,7 @@ fn main() {
                 .unwrap();
     }
 
-    let material_block = scene_block.material_block;
+    let material_block = render_data.scene_block.material_block;
 
     let material_buffer = UniformBuffer::new(&opengl_data.display, material_block).unwrap();
 

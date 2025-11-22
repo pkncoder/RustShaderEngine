@@ -322,7 +322,12 @@
         ]
       }
     ],
-    "objects_length": 4.0
+    "objects_length": 4.0,
+    "_padding": [
+        0.0, 
+        0.0, 
+        0.0
+    ]
   },
   "material_block": {
     "materials": [
@@ -407,6 +412,11 @@
         ]
       }
     ],
-    "materials_length": 3.0
+    "materials_length": 3.0,
+    "_padding": [
+        0.0,
+        0.0,
+        0.0
+    ]
   }
 }

@@ -1,4 +1,4 @@
-use crate::structs::{objects::object::Object, renderer_data::RenderData};
+use crate::structs::{objects::object::Object, render::render_data::RenderData};
 use imgui::{MouseButton, TreeNodeFlags, Ui};
 use uuid::Uuid;
 
