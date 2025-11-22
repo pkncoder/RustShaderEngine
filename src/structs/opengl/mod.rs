@@ -1,2 +1,2 @@
 pub mod opengl_configuration;
-pub mod opengldata;
+pub mod opengl_data;

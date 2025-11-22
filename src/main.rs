@@ -20,8 +20,6 @@ mod screen_mesh;
 mod shader;
 mod structs;
 
-use frames::SimpleFrame;
-
 use structs::renderer_data::RenderData;
 use structs::uniforms::uniform_struct::UniformStruct;
 
@@ -34,7 +32,7 @@ use crate::{
     builders::scene_builder::scene_builder,
     structs::{
         imgui::imgui_data::ImGuiData,
-        opengl::{opengl_configuration::OpenGLConfiguration, opengldata::OpenGLData},
+        opengl::{opengl_configuration::OpenGLConfiguration, opengl_data::OpenGLData},
         uniforms::combined_uniforms::combine_uniforms,
     },
 };
@@ -42,21 +40,14 @@ use crate::{
 fn main() {
     /* Initializations and building */
 
-    let open_gl_configuration = OpenGLConfiguration::build(
+    let opengl_configuration = OpenGLConfiguration::build(
         "shaders/vertex.vert".to_string(),
         "shaders/fragment.frag".to_string(),
         Some("./shaders/includes".to_string()),
     );
 
-    let opengl_data = OpenGLData::build(open_gl_configuration);
+    let mut opengl_data = OpenGLData::build(opengl_configuration);
     let mut imgui_data = ImGuiData::build(&opengl_data.window, &opengl_data.display);
-
-    // Frame, screen mesh, and shader building
-    let mut frame = SimpleFrame::build();
-    let screen_mesh = opengl_data.screen_mesh;
-    let shader = opengl_data.shader; // Linking the screen mesh and shader
-    frame.link_mesh(screen_mesh);
-    frame.link_shader(shader);
 
     /* UNIFORMS */
 
@@ -188,7 +179,7 @@ fn main() {
                 // --------------------------------------------------------
                 // DRAW FRAME
                 // --------------------------------------------------------
-                frame.draw(
+                opengl_data.frame.draw(
                     &opengl_data.display,
                     &new_uniform_buffer,
                     &Default::default(),
@@ -198,13 +189,13 @@ fn main() {
                 );
 
                 // Render imgui overlay
-                frame.render_imgui(
+                opengl_data.frame.render_imgui(
                     &mut imgui_data.imgui_context,
                     &mut imgui_data.imgui_renderer,
                 );
 
                 // Finish frame
-                frame.finish();
+                opengl_data.frame.finish();
 
                 frame_num += 1.0;
             }

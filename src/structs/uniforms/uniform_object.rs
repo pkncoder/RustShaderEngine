@@ -1,4 +1,4 @@
-use crate::enums::object_type::ObjectType;
+use crate::{enums::object_type::ObjectType, structs::objects::object::Object};
 use serde::{Deserialize, Serialize};
 
 #[repr(C, align(16))]
@@ -10,6 +10,12 @@ pub struct UniformObject {
     pub location4: [f32; 4],
     pub data: [f32; 4],
 }
+impl Object for UniformObject {
+    fn get_object_type(&self) -> ObjectType {
+        self.data[0].into()
+    }
+}
+
 impl UniformObject {
     pub fn get_as_vec(&self) -> Vec<f32> {
         let mut vec = Vec::new();
@@ -21,10 +27,6 @@ impl UniformObject {
         vec.append(&mut self.data.to_vec());
 
         vec
-    }
-
-    pub fn get_object_type(&self) -> ObjectType {
-        self.data[0].into()
     }
 }
 
