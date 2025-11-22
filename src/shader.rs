@@ -14,9 +14,9 @@ pub struct Shader {
 impl Shader {
     pub fn build(
         display: &Display<WindowSurface>,
-        vertex_shader_path: &str,
-        fragment_shader_path: &str,
-        includes_directory: Option<&str>,
+        vertex_shader_path: &String,
+        fragment_shader_path: &String,
+        includes_directory: Option<&String>,
     ) -> Shader {
         let vertex_shader =
             fs::read_to_string(vertex_shader_path).expect("Should have been able to read the file");

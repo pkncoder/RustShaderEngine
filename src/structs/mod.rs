@@ -1,4 +1,4 @@
-pub mod imgui_data;
+pub mod imgui;
 pub mod materials;
 pub mod node;
 pub mod objects;

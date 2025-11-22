@@ -1,5 +1,4 @@
 use crate::enums::object_type::ObjectType;
-use crate::structs::objects::object::Object;
 use serde::{Deserialize, Serialize};
 
 #[repr(C, align(16))]

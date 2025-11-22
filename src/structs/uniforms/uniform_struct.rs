@@ -1,12 +1,9 @@
-use glium::texture::buffer_texture::{BufferTexture, BufferTextureType};
 use glium::uniforms::Uniforms;
 
 use glium::backend::glutin::glutin::surface::WindowSurface;
 use glium::backend::glutin::Display;
 
 use glium::program::ShaderStage;
-
-use crate::structs::objects::object_block::ObjectBlock;
 
 #[repr(C, align(16))]
 pub struct UniformStruct {

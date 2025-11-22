@@ -3,7 +3,6 @@ use crate::editors::object_editors::sphere_editor::draw_sphere_editor;
 use crate::editors::object_editors::triangle_editor::draw_triangle_editor;
 use crate::enums::object_type::ObjectType;
 use crate::structs::node::Node;
-use crate::structs::objects::object::Object;
 use crate::structs::uniforms::uniform_object::UniformObject;
 use imgui::Ui;
 
