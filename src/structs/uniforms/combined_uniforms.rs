@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use glium::uniforms::{UniformValue, Uniforms};
 
 pub struct CombinedUniforms<U1, U2> {

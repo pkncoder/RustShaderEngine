@@ -26,14 +26,19 @@ impl Default for ObjectBlock {
 }
 
 impl ObjectBlock {
-    pub fn get_object_vec(&self) -> Vec<f32> {
+    pub fn get_object_vec(&self) -> Vec<[f32; 4]> {
         let mut vec = Vec::new();
 
         for uniform_object in self.objects {
             vec.append(&mut uniform_object.get_as_vec());
         }
 
-        vec
+        let object_vec: Vec<[f32; 4]> = vec
+            .chunks_exact(4)
+            .map(|c| [c[0], c[1], c[2], c[3]])
+            .collect();
+
+        object_vec
     }
 }
 

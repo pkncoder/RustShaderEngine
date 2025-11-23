@@ -1,17 +1,12 @@
 #[macro_use]
 extern crate glium;
 
-use glium::{
-    backend::winit::{
-        self,
-        event::{Event, WindowEvent},
-        window::Window,
-    },
-    texture::buffer_texture::{BufferTexture, BufferTextureType},
-    uniforms::UniformBuffer,
+use glium::backend::winit::{
+    self,
+    event::{Event, WindowEvent},
+    window::Window,
 };
 
-mod buffers;
 mod builders;
 mod editors;
 mod enums;
@@ -21,7 +16,6 @@ mod shader;
 mod structs;
 
 use structs::render::render_data::RenderData;
-use structs::uniforms::uniform_struct::UniformStruct;
 
 use structs::node::Node;
 
@@ -32,7 +26,7 @@ use crate::structs::{
     imgui::imgui_data::ImGuiData,
     opengl::{opengl_configuration::OpenGLConfiguration, opengl_data::OpenGLData},
     render::render_data_configuration::RenderDataConfiguration,
-    uniforms::combined_uniforms::combine_uniforms,
+    uniforms::uniform_data::UniformData,
 };
 
 fn main() {
@@ -53,38 +47,15 @@ fn main() {
     let mut render_data = RenderData::build(render_data_configuration);
     /* UNIFORMS */
 
-    // Build the uniforms
-    let mut uniforms = UniformStruct::build();
-    let mut frame_num = 0.0;
+    let mut uniforms = UniformData::build(&opengl_data.display, &render_data);
 
-    // Frametime
+    // // Frametime
     let mut last_frame = std::time::Instant::now();
-
-    // Object building
-    let object_block = render_data.scene_block.object_block;
 
     // Build the render data and the top object tree node
     let mut top_object_tree_node = Node::build_node_tree(&render_data);
 
     let mut selected_node_index = None;
-
-    let object_texture_buffer;
-
-    {
-        let object_vec: Vec<[f32; 4]> = object_block
-            .get_object_vec()
-            .chunks_exact(4)
-            .map(|c| [c[0], c[1], c[2], c[3]])
-            .collect();
-
-        object_texture_buffer =
-            BufferTexture::new(&opengl_data.display, &object_vec, BufferTextureType::Float)
-                .unwrap();
-    }
-
-    let material_block = render_data.scene_block.material_block;
-
-    let material_buffer = UniformBuffer::new(&opengl_data.display, material_block).unwrap();
 
     /* Event loop */
 
@@ -117,20 +88,20 @@ fn main() {
                 ..
             } => {
                 // Update uniforms per frame
-                uniforms.set_time(frame_num);
+                uniforms.time += 1.0;
+                uniforms.frame_num += 1;
 
                 // (Optional) If your object data changes, update the TBO
                 if true {
-                    println!("Updating TBO...");
-                    let object_vec: Vec<[f32; 4]> = render_data
-                        .scene_block
-                        .object_block
-                        .get_object_vec()
-                        .chunks_exact(4)
-                        .map(|c| [c[0], c[1], c[2], c[3]])
-                        .collect();
-                    object_texture_buffer.write(&object_vec);
+                    // println!("Updating TBO...");
+                    let object_vec: Vec<[f32; 4]> =
+                        render_data.scene_block.object_block.get_object_vec();
+
+                    uniforms.object_buffer.write(&object_vec);
                 }
+                uniforms
+                    .material_buffer
+                    .write(&render_data.scene_block.material_block);
 
                 // Create UI frame
                 let ui = imgui_data.imgui_context.frame();
@@ -152,24 +123,14 @@ fn main() {
                     &mut render_data.scene_block.object_block.objects,
                 );
 
-                let nuniform_buffer = uniforms.get_uniforms(&opengl_data.display);
-                material_buffer.write(&material_block);
-
-                let new_uniform_buffer = combine_uniforms(
-                    nuniform_buffer,
-                    uniform! {
-                        objects: &object_texture_buffer,
-                        objects_length: 10.0f32,
-                        MaterialBlock: &material_buffer,
-                    },
-                );
+                let uniform_buffer = uniforms.get_uniforms();
 
                 // --------------------------------------------------------
                 // DRAW FRAME
                 // --------------------------------------------------------
                 opengl_data.frame.draw(
                     &opengl_data.display,
-                    &new_uniform_buffer,
+                    &uniform_buffer,
                     &Default::default(),
                     &opengl_data.window,
                     ui,
@@ -185,7 +146,7 @@ fn main() {
                 // Finish frame
                 opengl_data.frame.finish();
 
-                frame_num += 1.0;
+                // frame_num += 1.0;
             }
             Event::WindowEvent {
                 // Window event (quit)
