@@ -1,6 +1,8 @@
+use serde::{Deserialize, Serialize};
+
 use crate::structs::uniforms::uniform_object::UniformObject;
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct BoxObject {
     pub origin: [f32; 4],
     pub data: [f32; 4],

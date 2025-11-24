@@ -5,7 +5,7 @@ use crate::structs::{
 };
 
 #[repr(C)]
-#[derive(Copy, Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct SceneBlock {
     pub object_block: ObjectBlock,
     pub material_block: MaterialBlock,

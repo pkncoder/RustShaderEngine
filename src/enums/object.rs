@@ -1,8 +1,13 @@
-use crate::structs::objects::{
-    box_object::BoxObject, sphere::Sphere, triangle::Triangle, triangle_mesh::TriangleMesh,
+use serde::{Deserialize, Serialize};
+
+use crate::structs::{
+    objects::{
+        box_object::BoxObject, sphere::Sphere, triangle::Triangle, triangle_mesh::TriangleMesh,
+    },
+    uniforms::uniform_object::UniformObject,
 };
 
-#[derive(Debug, Clone)]
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub enum Object {
     Sphere(Sphere),
     Box(BoxObject),
@@ -17,6 +22,33 @@ impl Object {
             Object::Box(_) => "Box",
             Object::Triangle(_) => "Triangle",
             Object::TriangleMesh(_) => "Triangle Mesh",
+        }
+    }
+}
+
+impl From<Object> for Vec<UniformObject> {
+    fn from(object: Object) -> Vec<UniformObject> {
+        let mut vector: Vec<UniformObject> = vec![];
+
+        match object {
+            Object::Sphere(o) => {
+                vector.push(Into::<UniformObject>::into(o));
+                vector
+            }
+            Object::Box(o) => {
+                vector.push(Into::<UniformObject>::into(o));
+                vector
+            }
+            Object::Triangle(o) => {
+                vector.push(Into::<UniformObject>::into(o));
+                vector
+            }
+            Object::TriangleMesh(o) => {
+                for triangle in o.triangles {
+                    vector.push(Into::<UniformObject>::into(triangle))
+                }
+                vector
+            }
         }
     }
 }

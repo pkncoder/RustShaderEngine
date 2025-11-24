@@ -1,8 +1,10 @@
 use std::fs;
 
+use serde::{Deserialize, Serialize};
+
 use crate::structs::{objects::triangle::Triangle, uniforms::uniform_object::UniformObject};
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct TriangleMesh {
     pub triangles: Vec<Triangle>,
     pub triangle_count: f32,

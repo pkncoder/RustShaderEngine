@@ -1,6 +1,8 @@
+use serde::{Deserialize, Serialize};
+
 use crate::structs::uniforms::uniform_object::UniformObject;
 
-#[derive(Copy, Clone, Debug, PartialEq)]
+#[derive(Copy, Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Sphere {
     pub origin: [f32; 3],
     pub radius: f32,
