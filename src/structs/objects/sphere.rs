@@ -1,18 +1,10 @@
-use crate::enums::object_type::ObjectType;
-use crate::structs::objects::object::Object;
 use crate::structs::uniforms::uniform_object::UniformObject;
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Sphere {
     pub origin: [f32; 3],
     pub radius: f32,
     pub data: [f32; 4],
-}
-
-impl Object for Sphere {
-    fn get_object_type(&self) -> ObjectType {
-        self.data[0].into()
-    }
 }
 
 impl From<Sphere> for UniformObject {

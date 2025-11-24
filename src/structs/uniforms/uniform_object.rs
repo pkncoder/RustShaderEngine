@@ -1,5 +1,6 @@
-use crate::{enums::object_type::ObjectType, structs::objects::object::Object};
 use serde::{Deserialize, Serialize};
+
+use crate::enums::object::Object;
 
 #[repr(C, align(16))]
 #[derive(Copy, Clone, Debug, Serialize, Deserialize)]
@@ -9,11 +10,6 @@ pub struct UniformObject {
     pub location3: [f32; 4],
     pub location4: [f32; 4],
     pub data: [f32; 4],
-}
-impl Object for UniformObject {
-    fn get_object_type(&self) -> ObjectType {
-        self.data[0].into()
-    }
 }
 
 impl UniformObject {

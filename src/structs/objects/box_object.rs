@@ -1,17 +1,9 @@
-use crate::enums::object_type::ObjectType;
-use crate::structs::objects::object::Object;
 use crate::structs::uniforms::uniform_object::UniformObject;
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, PartialEq)]
 pub struct BoxObject {
     pub origin: [f32; 4],
     pub data: [f32; 4],
-}
-
-impl Object for BoxObject {
-    fn get_object_type(&self) -> ObjectType {
-        self.data[0].into()
-    }
 }
 
 impl From<BoxObject> for UniformObject {

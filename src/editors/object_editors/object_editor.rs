@@ -1,16 +1,15 @@
 use crate::editors::object_editors::box_editors::draw_box_editor;
+use crate::editors::object_editors::mesh_editor::draw_mesh_editor;
 use crate::editors::object_editors::sphere_editor::draw_sphere_editor;
 use crate::editors::object_editors::triangle_editor::draw_triangle_editor;
-use crate::enums::object_type::ObjectType;
+use crate::enums::object::Object;
 use crate::structs::node::Node;
-use crate::structs::objects::object::Object;
-use crate::structs::uniforms::uniform_object::UniformObject;
 use imgui::Ui;
 
 pub fn draw_object_editor(
     ui: &Ui,
     selected_node: &mut Option<&mut Node>,
-    object_data: &mut [UniformObject],
+    object_data: &mut [Object],
 ) {
     ui.window("Object Editor")
         .size([300.0, 300.0], imgui::Condition::FirstUseEver)
@@ -33,15 +32,19 @@ pub fn draw_object_editor(
             }
 
             let object = &mut object_data[index];
-            match object.get_object_type() {
-                ObjectType::Sphere(_) => {
-                    draw_sphere_editor(ui, object);
+
+            match object {
+                Object::Sphere(o) => {
+                    draw_sphere_editor(ui, o);
                 }
-                ObjectType::Box(_) => {
-                    draw_box_editor(ui, object);
+                Object::Box(o) => {
+                    draw_box_editor(ui, o);
                 }
-                ObjectType::Triangle(_) => {
-                    draw_triangle_editor(ui, object);
+                Object::Triangle(o) => {
+                    draw_triangle_editor(ui, o);
+                }
+                Object::TriangleMesh(o) => {
+                    draw_mesh_editor(ui, o);
                 }
             }
         });

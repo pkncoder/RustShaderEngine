@@ -1,19 +1,13 @@
-use crate::enums::object_type::ObjectType;
-use crate::structs::objects::object::Object;
+use serde::{Deserialize, Serialize};
+
 use crate::structs::uniforms::uniform_object::UniformObject;
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, PartialEq, Serialize, Deserialize)]
 pub struct Triangle {
     pub vert1: [f32; 4],
     pub vert2: [f32; 4],
     pub vert3: [f32; 4],
     pub data: [f32; 4],
-}
-
-impl Object for Triangle {
-    fn get_object_type(&self) -> ObjectType {
-        self.data[0].into()
-    }
 }
 
 impl From<Triangle> for UniformObject {

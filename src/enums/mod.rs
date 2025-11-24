@@ -1,1 +1,1 @@
-pub mod object_type;
+pub mod object;

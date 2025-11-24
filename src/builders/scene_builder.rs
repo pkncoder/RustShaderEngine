@@ -1,6 +1,8 @@
-use std::fs;
+use std::fs::{self, File};
 
-use crate::structs::scenes::scene_block::SceneBlock;
+use crate::{
+    builders::object_block_builder::object_block_builder, structs::scenes::scene_block::SceneBlock,
+};
 
 pub fn scene_builder(scene_path: String) -> SceneBlock {
     let scene_block: SceneBlock =
@@ -19,8 +21,8 @@ pub fn scene_builder(scene_path: String) -> SceneBlock {
     // };
     //
     // serde_json::to_writer_pretty(
-    //     File::create("./scenes/cube_mesh.json").unwrap(),
-    //     &tempSceneBlock,
+    //     File::create("./assets/cube_mesh.json").unwrap(),
+    //     &object_block,
     // );
 
     scene_block
