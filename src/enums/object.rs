@@ -1,3 +1,5 @@
+use std::fs;
+
 use serde::{Deserialize, Serialize};
 
 use crate::structs::{
@@ -44,9 +46,15 @@ impl From<Object> for Vec<UniformObject> {
                 vector
             }
             Object::TriangleMesh(o) => {
-                for triangle in o.triangles {
-                    vector.push(Into::<UniformObject>::into(triangle))
+                let triangle_vec: Vec<Triangle> = serde_json::from_str(
+                    fs::read_to_string(o.asset_name.as_str()).unwrap().as_str(),
+                )
+                .unwrap();
+
+                for triangle in triangle_vec {
+                    vector.push(Into::<UniformObject>::into(triangle));
                 }
+
                 vector
             }
         }

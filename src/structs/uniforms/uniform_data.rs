@@ -28,7 +28,7 @@ pub struct UniformData {
 impl UniformData {
     pub const SHADING_MODELS: [&'static str; 2] = ["phong", "lambertion"];
 
-    pub fn build(display: &Display<WindowSurface>, render_data: &RenderData) -> UniformData {
+    pub fn build(display: &Display<WindowSurface>, render_data: &mut RenderData) -> UniformData {
         let (width, height) = display.get_framebuffer_dimensions();
 
         let object_buffer = BufferTexture::new(

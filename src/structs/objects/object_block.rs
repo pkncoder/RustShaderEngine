@@ -20,11 +20,14 @@ impl Default for ObjectBlock {
 }
 
 impl ObjectBlock {
-    pub fn get_object_vec(&self) -> Vec<[f32; 4]> {
+    pub fn get_object_vec(&mut self) -> Vec<[f32; 4]> {
         let mut vec = Vec::new();
+
+        self.objects_length = 0.0;
 
         for object in &self.objects {
             let uniform_object_vec: Vec<UniformObject> = object.clone().into();
+            self.objects_length += uniform_object_vec.len() as f32;
 
             for uniform_object in uniform_object_vec {
                 for item in uniform_object.get_as_vec() {
