@@ -42,7 +42,7 @@ fn main() {
     let mut imgui_data = ImGuiData::build(&opengl_data.window, &opengl_data.display);
 
     let render_data_configuration =
-        RenderDataConfiguration::build("./scenes/cube_mesh_but_mesh.json".to_string());
+        RenderDataConfiguration::build("./scenes/icosahedron_mesh.json".to_string());
 
     let mut render_data = RenderData::build(render_data_configuration);
     /* UNIFORMS */

@@ -82,7 +82,7 @@ void main() {
     float cameraDist = 1.0f / tan(FOV * 0.5f * PI / 180.0f);
 
     Ray ray = Ray(
-            -vec3(0.0, 0.0, 8.0) * rotate(time / 100.0) + vec3(0.0, 5.0, 6.0),
+            -vec3(0.0, 0.0, 8.0) * rotate(time / 100.0) + vec3(0.0, 5.0, 0.0),
             normalize(vec3(uv, cameraDist)) * rotateX(-35.0) * rotate(time / 100.0)
         );
 

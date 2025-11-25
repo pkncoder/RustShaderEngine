@@ -3,7 +3,7 @@
     "objects": [
       {
         "TriangleMesh": {
-          "asset_name": "./assets/cube_mesh.json"
+          "asset_name": "./assets/icosahedron_mesh.json"
         }
       }
     ],
