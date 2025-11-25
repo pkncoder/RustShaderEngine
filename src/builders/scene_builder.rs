@@ -1,11 +1,5 @@
-use std::fs::{self, File};
-
-use crate::{
-    builders::{
-        material_block_builder::material_block_builder, object_block_builder::object_block_builder,
-    },
-    structs::scenes::scene_block::SceneBlock,
-};
+use crate::structs::scenes::scene_block::SceneBlock;
+use std::fs;
 
 pub fn scene_builder(scene_path: String) -> SceneBlock {
     // let tempObjBlock = object_block_builder();

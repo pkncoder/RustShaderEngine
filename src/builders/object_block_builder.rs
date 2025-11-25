@@ -9,6 +9,7 @@ pub fn object_block_builder() -> Vec<Triangle> {
     //     .push(Object::TriangleMesh(TriangleMesh::new_mesh_with_file(
     //         "./assets/cube_mesh.json".to_string(),
     //     )));
+    // TODO: WHATS WRONG WDYM "calls `push` immediately" ??????
     let mut vec: Vec<Triangle> = Vec::new();
 
     vec.push(Triangle {

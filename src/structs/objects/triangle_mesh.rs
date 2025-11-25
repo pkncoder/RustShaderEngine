@@ -2,7 +2,7 @@ use std::fs;
 
 use serde::{Deserialize, Serialize};
 
-use crate::structs::{objects::triangle::Triangle, uniforms::uniform_object::UniformObject};
+use crate::structs::objects::triangle::Triangle;
 
 // TODO: Figure out if I want asset_name or asset_file_name or something else
 

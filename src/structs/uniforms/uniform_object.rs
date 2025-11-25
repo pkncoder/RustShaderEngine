@@ -1,7 +1,5 @@
 use serde::{Deserialize, Serialize};
 
-use crate::enums::object::Object;
-
 #[repr(C, align(16))]
 #[derive(Copy, Clone, Debug, Serialize, Deserialize)]
 pub struct UniformObject {

@@ -13,5 +13,5 @@ pub fn draw_mesh_editor(ui: &Ui, object: &mut TriangleMesh) {
     //     ui.slider("Cube Radius", 0.01, 20.0, &mut object.location2[0]);
     // });
 
-    ui.text("Cannot Edit Meshes Yet : (");
+    ui.text(format!("Cannot Edit Meshes Yet : ( {}", object.asset_name));
 }
