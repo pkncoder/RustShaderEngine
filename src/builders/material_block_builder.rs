@@ -28,8 +28,11 @@ pub fn material_block_builder() -> MaterialBlock {
     material_block.materials[7] = Material {
         color: [0.0, 0.0, 0.0, 0.0],
     };
+    material_block.materials[8] = Material {
+        color: [0.69020, 0.04314, 0.40784, 0.0],
+    };
 
-    material_block.materials_length = 8.0;
+    material_block.materials_length = 9.0;
 
     material_block
 }
