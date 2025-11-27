@@ -1,11 +1,6 @@
-use std::{fs, path::Path};
+use std::fs;
 
-use rand::Rng;
-
-use crate::{
-    enums::object::Object,
-    structs::{objects::triangle::Triangle, scenes::scene_block::SceneBlock},
-};
+use crate::structs::scenes::scene_block::SceneBlock;
 
 pub fn get_block_from_scene_file(scene_path: &str) -> SceneBlock {
     let scene_block: SceneBlock =
