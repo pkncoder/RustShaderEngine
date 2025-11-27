@@ -82,6 +82,7 @@ void main() {
             normalize(vec3(uv, cameraDist))
         );
 
+    // TODO: Create a way to set light positions
     HitInfo hit = rayTrace(ray);
 
     vec3 col = color(ray, hit);

@@ -3,8 +3,9 @@ vec3 color(Ray ray, HitInfo hit) {
         return getSkyColor(ray);
     }
 
-    else if (hit.hit == IN_SHADOW) {
+    if (hit.hit == IN_SHADOW) {
         vec3 lightColor = vec3(1.0);
+
         return ambient.xyz * ambient.w * lightColor * hit.material.color.xyz;
     }
 

@@ -1,6 +1,5 @@
 use std::{fs, path::Path};
 
-use rand::Rng;
 use serde::{Deserialize, Serialize};
 
 use crate::structs::objects::triangle::Triangle;
@@ -109,9 +108,9 @@ impl TriangleMesh {
                     mesh.positions[i3 * 3 + 2],
                     0.0,
                 ];
-                let mut rng = rand::rng();
-                let random_color = rng.random_range(0..8);
-                let data = [2.0, 0.0, 0.0, random_color as f32];
+                // let mut rng = rand::rng();
+                // let random_color = rng.random_range(0..8);
+                let data = [2.0, 0.0, 0.0, 6.0];
 
                 vec.push(Triangle {
                     vert1: v1,
