@@ -67,15 +67,7 @@ fn main() {
     opengl_data
         .event_loop
         .run(move |event, window_target| match event {
-            Event::NewEvents(_) => {
-                // Get frame time
-                // let now = std::time::Instant::now();
-                // imgui_data
-                //     .imgui_context
-                //     .io_mut()
-                //     .update_delta_time(now - last_frame);
-                // last_frame = now;
-            }
+            Event::NewEvents(_) => {}
             Event::AboutToWait => {
                 // Frame error checking
                 imgui_data
