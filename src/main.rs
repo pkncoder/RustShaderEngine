@@ -44,7 +44,7 @@ fn main() {
     let mut imgui_data = ImGuiData::build(&opengl_data.window, &opengl_data.display);
 
     let render_data_configuration =
-        RenderDataConfiguration::build("./scenes/ico_sphere.json".to_string());
+        RenderDataConfiguration::build("./scenes/roomates.json".to_string());
 
     let mut render_data = RenderData::build(render_data_configuration);
     /* UNIFORMS */
