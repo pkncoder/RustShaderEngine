@@ -69,12 +69,12 @@ fn main() {
         .run(move |event, window_target| match event {
             Event::NewEvents(_) => {
                 // Get frame time
-                let now = std::time::Instant::now();
-                imgui_data
-                    .imgui_context
-                    .io_mut()
-                    .update_delta_time(now - last_frame);
-                last_frame = now;
+                // let now = std::time::Instant::now();
+                // imgui_data
+                //     .imgui_context
+                //     .io_mut()
+                //     .update_delta_time(now - last_frame);
+                // last_frame = now;
             }
             Event::AboutToWait => {
                 // Frame error checking
@@ -106,23 +106,9 @@ fn main() {
                 //     .write(&render_data.scene_block.material_block);
 
                 let now = std::time::Instant::now();
-                let frame_time = now - last_frame;
-
-                if frame_time < fastest_frame {
-                    fastest_frame = frame_time;
-                }
-
-                if frame_time > slowest_frame {
-                    slowest_frame = frame_time;
-                }
 
                 // Create UI frame
                 let ui = imgui_data.imgui_context.frame();
-                ui.window("Frametime Status").build(|| {
-                    ui.text(format!("Frame Time: {:?}", frame_time));
-                    ui.text(format!("Fastest Frame: {:?}", fastest_frame));
-                    ui.text(format!("Slowest Frame: {:?}", slowest_frame));
-                });
 
                 // Draw UI
                 draw_renderer_editor(ui, &mut uniforms);
@@ -155,6 +141,22 @@ fn main() {
                     &mut imgui_data.winit_platform,
                 );
 
+                let frame_time = now - last_frame;
+
+                if frame_time < fastest_frame {
+                    fastest_frame = frame_time;
+                }
+
+                if frame_time > slowest_frame {
+                    slowest_frame = frame_time;
+                }
+
+                ui.window("Frametime Status").build(|| {
+                    ui.text(format!("Frame Time: {:?}", frame_time));
+                    ui.text(format!("Fastest Frame: {:?}", fastest_frame));
+                    ui.text(format!("Slowest Frame: {:?}", slowest_frame));
+                });
+
                 // Render imgui overlay
                 opengl_data.frame.render_imgui(
                     &mut imgui_data.imgui_context,
@@ -164,7 +166,7 @@ fn main() {
                 // Finish frame
                 opengl_data.frame.finish();
 
-                // frame_num += 1.0;
+                last_frame = now;
             }
             Event::WindowEvent {
                 // Window event (quit)
