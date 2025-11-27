@@ -1,18 +1,12 @@
 use crate::{
-    builders::{
-        material_block_builder::material_block_builder, object_block_builder::get_mesh_from_obj,
-    },
+    builders::object_block_builder::get_block_from_scene_file,
     structs::scenes::scene_block::SceneBlock,
 };
 
-pub fn scene_builder(obj_file_path: String) -> SceneBlock {
-    let object_block = get_mesh_from_obj(obj_file_path.as_str());
-    let material_block = material_block_builder();
+pub fn scene_builder(scene_path: String) -> SceneBlock {
+    let scene_block = get_block_from_scene_file(scene_path.as_str());
 
-    SceneBlock {
-        object_block,
-        material_block,
-    }
+    scene_block
 
     // serde_json::to_writer_pretty(
     //     File::create("./assets/cube_mesh.json").unwrap(),

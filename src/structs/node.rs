@@ -1,4 +1,4 @@
-use crate::structs::render::render_data::RenderData;
+use crate::structs::render::{self, render_data::RenderData};
 use imgui::{MouseButton, TreeNodeFlags, Ui};
 use uuid::Uuid;
 
@@ -31,8 +31,10 @@ impl Node {
     pub fn build_node_tree(renderer_data: &RenderData) -> Node {
         let mut top_node = Node::new("Objects".to_string(), true, None);
 
-        for i in 0..(renderer_data.scene_block.object_block.objects_length as usize) {
-            let object_type = "./src/structs/node.rs: unimplented get_object_method".to_string();
+        for i in 0..renderer_data.scene_block.object_block.objects.len() {
+            let object_type = renderer_data.scene_block.object_block.objects[i]
+                .descriptor()
+                .to_string();
 
             top_node
                 .children

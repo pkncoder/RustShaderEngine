@@ -12,7 +12,7 @@ pub struct RenderData {
 impl RenderData {
     pub fn build(configuration: RenderDataConfiguration) -> RenderData {
         RenderData {
-            scene_block: scene_builder(configuration.obj_file_path),
+            scene_block: scene_builder(configuration.scene_path),
         }
     }
 }

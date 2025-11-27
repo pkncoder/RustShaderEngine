@@ -42,7 +42,7 @@ fn main() {
     let mut imgui_data = ImGuiData::build(&opengl_data.window, &opengl_data.display);
 
     let render_data_configuration =
-        RenderDataConfiguration::build("./assets/sponza.obj".to_string());
+        RenderDataConfiguration::build("./scenes/ico_sphere.json".to_string());
 
     let mut render_data = RenderData::build(render_data_configuration);
     /* UNIFORMS */
@@ -64,8 +64,6 @@ fn main() {
         .event_loop
         .run(move |event, window_target| match event {
             Event::NewEvents(_) => {
-                // Every frame
-
                 // Get frame time
                 let now = std::time::Instant::now();
                 imgui_data
@@ -99,9 +97,9 @@ fn main() {
 
                     uniforms.object_buffer.write(&object_vec);
                 }
-                uniforms
-                    .material_buffer
-                    .write(&render_data.scene_block.material_block);
+                // uniforms
+                //     .material_buffer
+                //     .write(&render_data.scene_block.material_block);
 
                 // Create UI frame
                 let ui = imgui_data.imgui_context.frame();

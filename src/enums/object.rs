@@ -45,11 +45,9 @@ impl From<Object> for Vec<UniformObject> {
                 vector.push(Into::<UniformObject>::into(o));
                 vector
             }
-            Object::TriangleMesh(o) => {
-                let triangle_vec: Vec<Triangle> = serde_json::from_str(
-                    fs::read_to_string(o.asset_name.as_str()).unwrap().as_str(),
-                )
-                .unwrap();
+            Object::TriangleMesh(mut o) => {
+                o.expand_mesh_from_asset_name();
+                let triangle_vec: Vec<Triangle> = o.triangles;
 
                 for triangle in triangle_vec {
                     vector.push(Into::<UniformObject>::into(triangle));

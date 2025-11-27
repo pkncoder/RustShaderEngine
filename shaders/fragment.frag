@@ -69,27 +69,18 @@ layout(std140) uniform MaterialBlock {
 #include <toneMapping.glsl>
 
 void main() {
-    // fragColor = vec4(objects_length / 10.0, 0.0, 0.0, 0.0);
-    // return;
-
-    int max_idx = textureSize(objects);
-    // if (true) {
-    //     fragColor = vec4(1, 0, 0, 1); // draw red if reading past end
-    //     return;
-    // }
-
     vec2 uv = (fragPosition.xy * vec2(iResolution.x / iResolution.y, 1.0));
     float cameraDist = 1.0f / tan(FOV * 0.5f * PI / 180.0f);
 
-    // Ray ray = Ray(
-    //         -vec3(0.0, 0.0, 8.0) * rotate(time / 100.0) + vec3(0.0, 1.0, 0.0),
-    //         normalize(vec3(uv, cameraDist)) * rotateX(-7.0) * rotate(time / 100.0)
-    //     );
-
     Ray ray = Ray(
-            vec3(0.0, 1.0, -5.0),
-            normalize(vec3(uv, cameraDist))
+            -vec3(0.0, 0.0, 8.0) * rotate(time / 100.0) + vec3(0.0, 1.0, 0.0),
+            normalize(vec3(uv, cameraDist)) * rotateX(-7.0) * rotate(time / 100.0)
         );
+
+    // Ray ray = Ray(
+    //         vec3(0.0, 1.0, -5.0),
+    //         normalize(vec3(uv, cameraDist))
+    //     );
 
     HitInfo hit = rayTrace(ray);
 
