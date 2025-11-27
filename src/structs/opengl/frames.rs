@@ -1,7 +1,7 @@
 #![allow(dead_code)]
 
-use crate::screen_mesh::ScreenMesh;
-use crate::shader::Shader;
+use crate::structs::opengl::screen_mesh::ScreenMesh;
+use crate::structs::opengl::shader::Shader;
 
 use glium::{Frame, Surface};
 

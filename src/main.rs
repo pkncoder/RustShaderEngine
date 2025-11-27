@@ -12,9 +12,6 @@ use glium::backend::winit::{
 mod builders;
 mod editors;
 mod enums;
-mod frames;
-mod screen_mesh;
-mod shader;
 mod structs;
 
 use structs::render::render_data::RenderData;

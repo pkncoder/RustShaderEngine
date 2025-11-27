@@ -5,9 +5,9 @@ use glium::{
 };
 use glutin::surface::WindowSurface;
 
-use crate::{
-    frames::SimpleFrame, screen_mesh::ScreenMesh, shader::Shader,
-    structs::opengl::opengl_configuration::OpenGLConfiguration,
+use crate::structs::opengl::{
+    frames::SimpleFrame, opengl_configuration::OpenGLConfiguration, screen_mesh::ScreenMesh,
+    shader::Shader,
 };
 
 pub struct OpenGLData {
