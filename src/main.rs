@@ -1,6 +1,8 @@
 #[macro_use]
 extern crate glium;
 
+use std::time::Duration;
+
 use glium::backend::winit::{
     self,
     event::{Event, WindowEvent},
@@ -49,13 +51,15 @@ fn main() {
 
     let mut uniforms = UniformData::build(&opengl_data.display, &mut render_data);
 
-    // // Frametime
-    let mut last_frame = std::time::Instant::now();
-
     // Build the render data and the top object tree node
     let mut top_object_tree_node = Node::build_node_tree(&render_data);
 
     let mut selected_node_index = None;
+
+    // // Frametime
+    let mut last_frame = std::time::Instant::now();
+    let mut fastest_frame = Duration::MAX;
+    let mut slowest_frame = Duration::ZERO;
 
     /* Event loop */
 
@@ -90,7 +94,7 @@ fn main() {
                 uniforms.frame_num += 1;
 
                 // (Optional) If your object data changes, update the TBO
-                if true {
+                if false {
                     // println!("Updating TBO...");
                     let object_vec: Vec<[f32; 4]> =
                         render_data.scene_block.object_block.get_object_vec();
@@ -101,8 +105,24 @@ fn main() {
                 //     .material_buffer
                 //     .write(&render_data.scene_block.material_block);
 
+                let now = std::time::Instant::now();
+                let frame_time = now - last_frame;
+
+                if frame_time < fastest_frame {
+                    fastest_frame = frame_time;
+                }
+
+                if frame_time > slowest_frame {
+                    slowest_frame = frame_time;
+                }
+
                 // Create UI frame
                 let ui = imgui_data.imgui_context.frame();
+                ui.window("Frametime Status").build(|| {
+                    ui.text(format!("Frame Time: {:?}", frame_time));
+                    ui.text(format!("Fastest Frame: {:?}", fastest_frame));
+                    ui.text(format!("Slowest Frame: {:?}", slowest_frame));
+                });
 
                 // Draw UI
                 draw_renderer_editor(ui, &mut uniforms);
