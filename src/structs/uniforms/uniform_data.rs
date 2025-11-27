@@ -6,7 +6,10 @@ use glium::{
 };
 use glutin::surface::WindowSurface;
 
-use crate::structs::{materials::material_block::MaterialBlock, render::render_data::RenderData};
+use crate::structs::{
+    materials::material_block::MaterialBlock, objects::object_block::ObjectBlock,
+    render::render_data::RenderData, scenes::scene_block::SceneBlock,
+};
 
 pub struct UniformData {
     pub screen_resolution: [f32; 2],
@@ -77,5 +80,23 @@ impl UniformData {
         };
 
         uniforms
+    }
+
+    #[allow(dead_code)]
+    pub fn update_object_block(&mut self, object_block: &mut ObjectBlock) {
+        let object_vec: Vec<[f32; 4]> = object_block.get_object_vec();
+
+        self.object_buffer.write(&object_vec);
+    }
+
+    #[allow(dead_code)]
+    pub fn update_material_block(&mut self, material_block: &mut MaterialBlock) {
+        self.material_buffer.write(material_block);
+    }
+
+    #[allow(dead_code)]
+    pub fn update_buffers(&mut self, scene_block: &mut SceneBlock) {
+        self.update_object_block(&mut scene_block.object_block);
+        self.update_material_block(&mut scene_block.material_block);
     }
 }

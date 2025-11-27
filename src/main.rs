@@ -44,7 +44,7 @@ fn main() {
     let mut imgui_data = ImGuiData::build(&opengl_data.window, &opengl_data.display);
 
     let render_data_configuration =
-        RenderDataConfiguration::build("./scenes/roomates.json".to_string());
+        RenderDataConfiguration::build("./scenes/ico_sphere.json".to_string());
 
     let mut render_data = RenderData::build(render_data_configuration);
     /* UNIFORMS */
@@ -57,7 +57,7 @@ fn main() {
     let mut selected_node_index = None;
 
     // // Frametime
-    let mut last_frame = std::time::Instant::now();
+    let mut last_frame: Option<Duration> = None;
     let mut fastest_frame = Duration::MAX;
     let mut slowest_frame = Duration::ZERO;
 
@@ -81,26 +81,30 @@ fn main() {
                 event: WindowEvent::RedrawRequested,
                 ..
             } => {
+                let start_rendering = std::time::Instant::now();
+
                 // Update uniforms per frame
                 uniforms.time += 1.0;
                 uniforms.frame_num += 1;
 
-                // (Optional) If your object data changes, update the TBO
-                if false {
-                    // println!("Updating TBO...");
-                    let object_vec: Vec<[f32; 4]> =
-                        render_data.scene_block.object_block.get_object_vec();
-
-                    uniforms.object_buffer.write(&object_vec);
-                }
-                // uniforms
-                //     .material_buffer
-                //     .write(&render_data.scene_block.material_block);
-
-                let now = std::time::Instant::now();
-
                 // Create UI frame
                 let ui = imgui_data.imgui_context.frame();
+
+                if let Some(last_frame_time) = last_frame {
+                    if last_frame_time < fastest_frame {
+                        fastest_frame = last_frame_time;
+                    }
+
+                    if last_frame_time > slowest_frame {
+                        slowest_frame = last_frame_time;
+                    }
+                }
+
+                ui.window("Frametime Status (one behind)").build(|| {
+                    ui.text(format!("Frame Time: {:?}", last_frame));
+                    ui.text(format!("Fastest Frame: {:?}", fastest_frame));
+                    ui.text(format!("Slowest Frame: {:?}", slowest_frame));
+                });
 
                 // Draw UI
                 draw_renderer_editor(ui, &mut uniforms);
@@ -133,22 +137,6 @@ fn main() {
                     &mut imgui_data.winit_platform,
                 );
 
-                let frame_time = now - last_frame;
-
-                if frame_time < fastest_frame {
-                    fastest_frame = frame_time;
-                }
-
-                if frame_time > slowest_frame {
-                    slowest_frame = frame_time;
-                }
-
-                ui.window("Frametime Status").build(|| {
-                    ui.text(format!("Frame Time: {:?}", frame_time));
-                    ui.text(format!("Fastest Frame: {:?}", fastest_frame));
-                    ui.text(format!("Slowest Frame: {:?}", slowest_frame));
-                });
-
                 // Render imgui overlay
                 opengl_data.frame.render_imgui(
                     &mut imgui_data.imgui_context,
@@ -158,7 +146,10 @@ fn main() {
                 // Finish frame
                 opengl_data.frame.finish();
 
-                last_frame = now;
+                let end_rendering = std::time::Instant::now();
+                let frame_time = end_rendering - start_rendering;
+
+                last_frame = Some(frame_time);
             }
             Event::WindowEvent {
                 // Window event (quit)

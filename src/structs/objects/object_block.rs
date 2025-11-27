@@ -19,6 +19,8 @@ impl Default for ObjectBlock {
     }
 }
 
+// TODO: Get rid of get_object_vec being mutable
+// TODO: Get rid of objects_length (mostly in the scene json files)
 impl ObjectBlock {
     pub fn get_object_vec(&mut self) -> Vec<[f32; 4]> {
         let mut vec = Vec::new();
