@@ -63,6 +63,19 @@ HitInfo rayBox(Ray ray, Object box) {
     return hit;
 }
 
+bool rayAABB(Ray ray, Object aabb) {
+    vec3 t1 = (aabb.location1.xyz - ray.origin) / ray.direction;
+    vec3 t2 = (aabb.location2.xyz - ray.origin) / ray.direction;
+
+    vec3 tMin = min(t1, t2);
+    vec3 tMax = max(t1, t2);
+
+    float largestMin = max(min(tMin.x, tMin.y), tMin.z);
+    float smallestMax = min(min(tMax.x, tMax.y), tMax.z);
+
+    return smallestMax >= largestMin && smallestMax >= 0.0;
+}
+
 HitInfo rayTriangle(Ray ray, Object tri) {
 
     // Initialize hit info
