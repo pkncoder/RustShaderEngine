@@ -1,4 +1,7 @@
 #!/bin/bash
 
+BACKTRACE="${1:-0}"
+export RUST_BACKTRACE="$BACKTRACE"
+
 clear
 cargo run
