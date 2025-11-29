@@ -46,7 +46,7 @@ fn main() {
     imgui_data.imgui_context.io_mut().config_flags |= imgui::ConfigFlags::DOCKING_ENABLE;
 
     let render_data_configuration =
-        RenderDataConfiguration::build("./scenes/ico_sphere.json".to_string());
+        RenderDataConfiguration::build("./scenes/suzanne.json".to_string());
 
     let mut render_data = RenderData::build(render_data_configuration);
     /* UNIFORMS */
@@ -115,12 +115,15 @@ fn main() {
                                 .sum::<Duration>()
                                 .div_f32(frametime_queue.len() as f32),
                         ));
+                    } else {
+                        ui.text("Frame Collection Empty");
                     }
                     ui.text(format!("Fastest Frame Time: {:?}", fastest_frame));
                     ui.text(format!("Slowest Frame Time: {:?}", slowest_frame));
                     if ui.button("Reset") {
                         fastest_frame = Duration::MAX;
                         slowest_frame = Duration::ZERO;
+                        frametime_queue.clear();
                     }
                 });
 
