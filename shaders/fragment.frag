@@ -70,6 +70,7 @@ layout(std140) uniform MaterialBlock {
 
 void main() {
     vec2 uv = (fragPosition.xy * vec2(iResolution.x / iResolution.y, 1.0));
+    uv.y *= -1.0;
     float cameraDist = 1.0f / tan(FOV * 0.5f * PI / 180.0f);
 
     // Ray ray = Ray(

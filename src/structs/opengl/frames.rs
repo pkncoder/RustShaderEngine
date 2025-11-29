@@ -23,19 +23,22 @@ pub struct SimpleFrame {
     pub clr_alpha: f32,
 
     pub texture: Rc<Texture2d>,
+    pub fbo_width: usize,
+    pub fbo_height: usize,
+
     pub linked_mesh: Option<ScreenMesh>,
     pub linked_shader: Option<Shader>,
 }
 
 impl SimpleFrame {
     pub fn build(display: &Display<WindowSurface>) -> SimpleFrame {
+        let fbo_dimentions = display.get_framebuffer_dimensions();
+
+        let fbo_width: usize = fbo_dimentions.0 as usize;
+        let fbo_height: usize = fbo_dimentions.1 as usize;
+
         let texture: Rc<Texture2d> = Rc::new(
-            glium::texture::Texture2d::empty(
-                display,
-                display.get_framebuffer_dimensions().0,
-                display.get_framebuffer_dimensions().1,
-            )
-            .unwrap(),
+            glium::texture::Texture2d::empty(display, fbo_width as u32, fbo_height as u32).unwrap(),
         );
 
         SimpleFrame {
@@ -45,6 +48,8 @@ impl SimpleFrame {
             clr_alpha: 1.0,
 
             texture,
+            fbo_width,
+            fbo_height,
 
             linked_mesh: None,
             linked_shader: None,
@@ -56,6 +61,15 @@ impl SimpleFrame {
         self.clr_green = green;
         self.clr_blue = blue;
         self.clr_alpha = alpha;
+    }
+
+    pub fn set_fbo_size(&mut self, display: &Display<WindowSurface>, width: usize, height: usize) {
+        self.fbo_width = width;
+        self.fbo_height = height;
+
+        self.texture = Rc::new(
+            glium::texture::Texture2d::empty(display, width as u32, height as u32).unwrap(),
+        );
     }
 
     pub fn link_mesh(&mut self, mesh: ScreenMesh) {

@@ -1,7 +1,7 @@
 #[macro_use]
 extern crate glium;
 
-use std::time::Duration;
+use std::{collections::VecDeque, time::Duration};
 
 use glium::{
     backend::winit::{
@@ -17,7 +17,6 @@ mod editors;
 mod enums;
 mod structs;
 
-use imgui::TextureId;
 use imgui_glium_renderer::Texture;
 use structs::render::render_data::RenderData;
 
@@ -28,7 +27,7 @@ use editors::renderer_editor::draw_renderer_editor;
 
 use crate::structs::{
     imgui::imgui_data::ImGuiData,
-    opengl::{self, opengl_configuration::OpenGLConfiguration, opengl_data::OpenGLData},
+    opengl::{opengl_configuration::OpenGLConfiguration, opengl_data::OpenGLData},
     render::render_data_configuration::RenderDataConfiguration,
     uniforms::uniform_data::UniformData,
 };
@@ -63,6 +62,8 @@ fn main() {
     let mut last_frame: Option<Duration> = None;
     let mut fastest_frame = Duration::MAX;
     let mut slowest_frame = Duration::ZERO;
+    let mut frametime_queue: VecDeque<Duration> = VecDeque::new();
+    let frametime_queue_max_length = 60;
 
     /* Event loop */
 
@@ -106,8 +107,21 @@ fn main() {
 
                 ui.window("Frametime Status (one behind)").build(|| {
                     ui.text(format!("Frame Time: {:?}", last_frame));
-                    ui.text(format!("Fastest Frame: {:?}", fastest_frame));
-                    ui.text(format!("Slowest Frame: {:?}", slowest_frame));
+                    if !frametime_queue.is_empty() {
+                        ui.text(format!(
+                            "Average Frame Time: {:?}",
+                            frametime_queue
+                                .iter()
+                                .sum::<Duration>()
+                                .div_f32(frametime_queue.len() as f32),
+                        ));
+                    }
+                    ui.text(format!("Fastest Frame Time: {:?}", fastest_frame));
+                    ui.text(format!("Slowest Frame Time: {:?}", slowest_frame));
+                    if ui.button("Reset") {
+                        fastest_frame = Duration::MAX;
+                        slowest_frame = Duration::ZERO;
+                    }
                 });
 
                 // Draw UI
@@ -152,6 +166,10 @@ fn main() {
                 let tex_id = imgui_data.imgui_renderer.textures().insert(imgui_tex); // takes glium::texture::Texture2d
 
                 let style_1 = ui.push_style_var(imgui::StyleVar::WindowPadding([0.0, 0.0]));
+
+                let mut scaled_width = 0.0;
+                let mut scaled_height = 0.0;
+
                 ui.window("Viewport").title_bar(false).build(|| {
                     // 1. Get the available space in the current window
                     let content_region_avail = ui.content_region_avail();
@@ -164,8 +182,8 @@ fn main() {
                         / opengl_data.display.get_framebuffer_dimensions().1 as f32;
                     let content_aspect_ratio = content_width / content_height;
 
-                    let mut scaled_width = content_width;
-                    let mut scaled_height = content_height;
+                    scaled_width = content_width;
+                    scaled_height = content_height;
                     let mut x_padding = 0.0;
                     let mut y_padding = 0.0;
 
@@ -206,6 +224,23 @@ fn main() {
                 let frame_time = end_rendering - start_rendering;
 
                 last_frame = Some(frame_time);
+                frametime_queue.push_back(last_frame.unwrap());
+
+                if frametime_queue.len() > frametime_queue_max_length {
+                    frametime_queue.pop_front();
+                }
+
+                imgui_data.imgui_renderer.textures().remove(tex_id);
+
+                if opengl_data.frame.fbo_width != scaled_width as usize
+                    || opengl_data.frame.fbo_height != scaled_height as usize
+                {
+                    opengl_data.frame.set_fbo_size(
+                        &opengl_data.display,
+                        scaled_width as usize,
+                        scaled_height as usize,
+                    );
+                }
             }
             Event::WindowEvent {
                 // Window event (quit)
