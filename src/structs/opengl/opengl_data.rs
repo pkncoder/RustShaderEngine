@@ -24,7 +24,7 @@ impl OpenGLData {
             .with_title("Rust Shader Engine")
             .build(&event_loop);
 
-        let mut frame = SimpleFrame::build();
+        let mut frame = SimpleFrame::build(&display);
 
         let shader = Shader::build(
             &display,

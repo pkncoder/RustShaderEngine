@@ -3,10 +3,13 @@ extern crate glium;
 
 use std::time::Duration;
 
-use glium::backend::winit::{
-    self,
-    event::{Event, WindowEvent},
-    window::Window,
+use glium::{
+    backend::winit::{
+        self,
+        event::{Event, WindowEvent},
+        window::Window,
+    },
+    Surface,
 };
 
 mod builders;
@@ -14,6 +17,8 @@ mod editors;
 mod enums;
 mod structs;
 
+use imgui::TextureId;
+use imgui_glium_renderer::Texture;
 use structs::render::render_data::RenderData;
 
 use structs::node::Node;
@@ -23,7 +28,7 @@ use editors::renderer_editor::draw_renderer_editor;
 
 use crate::structs::{
     imgui::imgui_data::ImGuiData,
-    opengl::{opengl_configuration::OpenGLConfiguration, opengl_data::OpenGLData},
+    opengl::{self, opengl_configuration::OpenGLConfiguration, opengl_data::OpenGLData},
     render::render_data_configuration::RenderDataConfiguration,
     uniforms::uniform_data::UniformData,
 };
@@ -39,6 +44,7 @@ fn main() {
 
     let mut opengl_data = OpenGLData::build(opengl_configuration);
     let mut imgui_data = ImGuiData::build(&opengl_data.window, &opengl_data.display);
+    imgui_data.imgui_context.io_mut().config_flags |= imgui::ConfigFlags::DOCKING_ENABLE;
 
     let render_data_configuration =
         RenderDataConfiguration::build("./scenes/ico_sphere.json".to_string());
@@ -86,6 +92,7 @@ fn main() {
 
                 // Create UI frame
                 let ui = imgui_data.imgui_context.frame();
+                ui.dockspace_over_main_viewport();
 
                 if let Some(last_frame_time) = last_frame {
                     if last_frame_time < fastest_frame {
@@ -134,14 +141,66 @@ fn main() {
                     &mut imgui_data.winit_platform,
                 );
 
+                let mut frame = opengl_data.display.draw();
+                frame.clear_color(0.0, 0.0, 0.0, 0.0);
+
+                let imgui_tex = Texture {
+                    texture: opengl_data.frame.texture.clone(), // or reference
+                    sampler: Default::default(),
+                };
+
+                let tex_id = imgui_data.imgui_renderer.textures().insert(imgui_tex); // takes glium::texture::Texture2d
+
+                let style_1 = ui.push_style_var(imgui::StyleVar::WindowPadding([0.0, 0.0]));
+                ui.window("Viewport").title_bar(false).build(|| {
+                    // 1. Get the available space in the current window
+                    let content_region_avail = ui.content_region_avail();
+                    let content_width = content_region_avail[0];
+                    let content_height = content_region_avail[1];
+
+                    // Calculate aspect ratios
+                    let image_aspect_ratio = opengl_data.display.get_framebuffer_dimensions().0
+                        as f32
+                        / opengl_data.display.get_framebuffer_dimensions().1 as f32;
+                    let content_aspect_ratio = content_width / content_height;
+
+                    let mut scaled_width = content_width;
+                    let mut scaled_height = content_height;
+                    let mut x_padding = 0.0;
+                    let mut y_padding = 0.0;
+
+                    // 2. Calculate scaling factor to maintain aspect ratio
+                    if content_aspect_ratio > image_aspect_ratio {
+                        // Content region is wider, scale based on height
+                        scaled_width = content_height * image_aspect_ratio;
+                        x_padding = (content_width - scaled_width) / 2.0;
+                    } else {
+                        // Content region is taller or aspect ratios match, scale based on width
+                        scaled_height = content_width / image_aspect_ratio;
+                        y_padding = (content_height - scaled_height) / 2.0;
+                    }
+
+                    // 3. Set cursor position for centering (if needed) and render image
+                    // Push the cursor position to center the image if there is padding
+                    ui.set_cursor_pos([
+                        ui.cursor_pos()[0] + x_padding,
+                        ui.cursor_pos()[1] + y_padding,
+                    ]);
+
+                    imgui::Image::new(tex_id, [scaled_width, scaled_height]).build(ui);
+                });
+
+                style_1.pop();
+
                 // Render imgui overlay
                 opengl_data.frame.render_imgui(
                     &mut imgui_data.imgui_context,
                     &mut imgui_data.imgui_renderer,
+                    &mut frame,
                 );
 
                 // Finish frame
-                opengl_data.frame.finish();
+                frame.finish().unwrap();
 
                 let end_rendering = std::time::Instant::now();
                 let frame_time = end_rendering - start_rendering;
