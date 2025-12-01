@@ -1,7 +1,7 @@
 use glium::{
     program::ShaderStage,
     texture::buffer_texture::{BufferTexture, BufferTextureType},
-    uniforms::{UniformBuffer, Uniforms},
+    uniforms::Uniforms,
     Display,
 };
 use glutin::surface::WindowSurface;
@@ -25,7 +25,8 @@ pub struct UniformData {
     pub object_buffer: BufferTexture<[f32; 4]>,
     pub object_num: f32,
 
-    pub material_buffer: UniformBuffer<MaterialBlock>,
+    pub material_buffer: BufferTexture<[f32; 4]>,
+    pub material_num: f32,
 }
 
 impl UniformData {
@@ -43,8 +44,14 @@ impl UniformData {
 
         let object_num = render_data.scene_block.object_block.objects_length;
 
-        let material_buffer =
-            UniformBuffer::new(display, render_data.scene_block.material_block).unwrap();
+        let material_buffer = BufferTexture::new(
+            display,
+            &render_data.scene_block.material_block.get_material_vec(),
+            BufferTextureType::Float,
+        )
+        .unwrap();
+
+        let material_num = render_data.scene_block.material_block.materials_length;
 
         UniformData {
             screen_resolution: [width as f32, height as f32],
@@ -61,6 +68,7 @@ impl UniformData {
             object_num,
 
             material_buffer,
+            material_num,
         }
     }
 
@@ -76,7 +84,8 @@ impl UniformData {
 
             objects: &self.object_buffer,
             objects_length: self.object_num,
-            MaterialBlock: &self.material_buffer,
+            materials: &self.material_buffer,
+            materials_length: self.material_num
         };
 
         uniforms
@@ -91,7 +100,9 @@ impl UniformData {
 
     #[allow(dead_code)]
     pub fn update_material_block(&mut self, material_block: &mut MaterialBlock) {
-        self.material_buffer.write(material_block);
+        let material_vec: Vec<[f32; 4]> = material_block.get_material_vec();
+
+        self.material_buffer.write(&material_vec);
     }
 
     #[allow(dead_code)]

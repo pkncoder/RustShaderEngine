@@ -15,44 +15,53 @@ uniform float time;
 
 #include <rotations.glsl>
 
-// layout(std140) uniform ObjectBlock {
-//     Object objects[10];
-//     float objects_length;
-// };
-
+// Objects
 uniform samplerBuffer objects;
 uniform float objects_length;
 
 Object fetchObject(int objectIndex) {
+    // Each index needs to skip 5 slots (each index takes 5 slots)
     int base_texel_index = objectIndex * 5;
 
+    // Init a zeroed object
     Object obj;
-    // Use texelFetch to get data at an integer index from the 1D texture.
+
+    // Location 1
     obj.location1 = texelFetch(objects, base_texel_index + 0);
-    // obj.location1.y = texelFetch(objects, base_texel_index + 1).w;
-    // obj.location1.z = texelFetch(objects, base_texel_index + 2).w;
 
+    // Location 2
     obj.location2 = texelFetch(objects, base_texel_index + 1);
-    // obj.location2.y = texelFetch(objects, base_texel_index + 5).w;
-    // obj.location2.z = texelFetch(objects, base_texel_index + 6).w;
 
+    // Location 3
     obj.location3 = texelFetch(objects, base_texel_index + 2);
-    // obj.location3.y = texelFetch(objects, base_texel_index + 9).w;
-    // obj.location3.z = texelFetch(objects, base_texel_index + 10).w;
 
+    // Location 4
     obj.location4 = texelFetch(objects, base_texel_index + 3);
-    // obj.location4.y = texelFetch(objects, base_texel_index + 13).w;
-    // obj.location4.z = texelFetch(objects, base_texel_index + 14).w;
 
+    // Data block
     obj.data = texelFetch(objects, base_texel_index + 4);
 
+    // Return the final object
     return obj;
 }
 
-layout(std140) uniform MaterialBlock {
-    Material materials[10];
-    float materials_length;
-};
+// Materials
+uniform samplerBuffer materials;
+uniform float material_length;
+
+Material fetchMaterial(int materialIndex) {
+    // Each index needs to skip 1 slots (each index takes 1 slots)
+    int base_texel_index = materialIndex * 1;
+
+    // Init a zeroed material
+    Material mat;
+
+    // Set the main albedo for the material
+    mat.color = texelFetch(materials, base_texel_index + 0);
+
+    // Return the final material
+    return mat;
+}
 
 #include <interceptions.glsl>
 

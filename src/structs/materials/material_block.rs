@@ -20,4 +20,32 @@ impl Default for MaterialBlock {
     }
 }
 
-implement_uniform_block!(MaterialBlock, materials, materials_length);
+impl MaterialBlock {
+    pub fn get_material_vec(&mut self) -> Vec<[f32; 4]> {
+        let mut vec = Vec::new();
+
+        self.materials_length = 0.0;
+
+        for material in &self.materials {
+            // let uniform_object_vec: Vec<UniformObject> = object.clone().into();
+            self.materials_length += 1.0;
+
+            // for uniform_object in uniform_object_vec {
+            //     for item in uniform_object.get_as_vec() {
+            //         vec.push(item);
+            //     }
+            // }
+
+            for item in material.color {
+                vec.push(item);
+            }
+        }
+
+        let material_vec: Vec<[f32; 4]> = vec
+            .chunks_exact(4)
+            .map(|c| [c[0], c[1], c[2], c[3]])
+            .collect();
+
+        material_vec
+    }
+}

@@ -22,7 +22,7 @@ HitInfo raySphere(Ray ray, Object sphere) {
             hit.dist = t;
             hit.hitPos = ray.origin + ray.direction * t;
             hit.normal = normalize(hit.hitPos - sphere.location1.xyz);
-            hit.material = materials[int(sphere.data.w)];
+            hit.material = fetchMaterial(int(sphere.data.w));
         }
     }
 
@@ -58,7 +58,7 @@ HitInfo rayBox(Ray ray, Object box) {
     hit.dist = t;
     hit.hitPos = ray.origin + ray.direction * t;
     hit.normal = normalize(-sign(ray.direction) * step(t1.yzx, t1.xyz) * step(t1.zxy, t1.xyz));
-    hit.material = materials[int(box.data.w)];
+    hit.material = fetchMaterial(int(box.data.w));
 
     return hit;
 }
@@ -124,7 +124,7 @@ HitInfo rayTriangle(Ray ray, Object tri) {
         hit.normal = n;
 
         // Assign material from tri.data.w (consistent with your box)
-        hit.material = materials[int(tri.data.w)];
+        hit.material = fetchMaterial(int(tri.data.w));
     }
 
     return hit;
