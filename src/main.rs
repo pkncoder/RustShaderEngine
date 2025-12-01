@@ -1,8 +1,6 @@
 #[macro_use]
 extern crate glium;
 
-use std::{collections::VecDeque, time::Duration};
-
 use glium::{
     backend::winit::{
         self,
@@ -28,7 +26,7 @@ use editors::renderer_editor::draw_renderer_editor;
 use crate::structs::{
     imgui::imgui_data::ImGuiData,
     opengl::{opengl_configuration::OpenGLConfiguration, opengl_data::OpenGLData},
-    render::render_data_configuration::RenderDataConfiguration,
+    render::{frametime::FrameTime, render_data_configuration::RenderDataConfiguration},
     uniforms::uniform_data::UniformData,
 };
 
@@ -46,7 +44,7 @@ fn main() {
     imgui_data.imgui_context.io_mut().config_flags |= imgui::ConfigFlags::DOCKING_ENABLE;
 
     let render_data_configuration =
-        RenderDataConfiguration::build("./scenes/suzanne.json".to_string());
+        RenderDataConfiguration::build("./scenes/ico_sphere.json".to_string());
 
     let mut render_data = RenderData::build(render_data_configuration);
     /* UNIFORMS */
@@ -59,12 +57,8 @@ fn main() {
     let mut selected_node_index = None;
 
     // // Frametime
-    let mut last_frame: Option<Duration> = None;
-    let mut fastest_frame = Duration::MAX;
-    let mut slowest_frame = Duration::ZERO;
-    let mut frametime_queue: VecDeque<Duration> = VecDeque::new();
-    let frametime_queue_max_length = 60;
-
+    let average_frametime_max_tracking = 60;
+    let mut frametime = FrameTime::build(average_frametime_max_tracking);
     /* Event loop */
 
     #[allow(deprecated)]
@@ -85,7 +79,7 @@ fn main() {
                 event: WindowEvent::RedrawRequested,
                 ..
             } => {
-                let start_rendering = std::time::Instant::now();
+                frametime.start_tracking();
 
                 // Update uniforms per frame
                 uniforms.time += 1.0;
@@ -95,37 +89,7 @@ fn main() {
                 let ui = imgui_data.imgui_context.frame();
                 ui.dockspace_over_main_viewport();
 
-                if let Some(last_frame_time) = last_frame {
-                    if last_frame_time < fastest_frame {
-                        fastest_frame = last_frame_time;
-                    }
-
-                    if last_frame_time > slowest_frame {
-                        slowest_frame = last_frame_time;
-                    }
-                }
-
-                ui.window("Frametime Status (one behind)").build(|| {
-                    ui.text(format!("Frame Time: {:?}", last_frame));
-                    if !frametime_queue.is_empty() {
-                        ui.text(format!(
-                            "Average Frame Time: {:?}",
-                            frametime_queue
-                                .iter()
-                                .sum::<Duration>()
-                                .div_f32(frametime_queue.len() as f32),
-                        ));
-                    } else {
-                        ui.text("Frame Collection Empty");
-                    }
-                    ui.text(format!("Fastest Frame Time: {:?}", fastest_frame));
-                    ui.text(format!("Slowest Frame Time: {:?}", slowest_frame));
-                    if ui.button("Reset") {
-                        fastest_frame = Duration::MAX;
-                        slowest_frame = Duration::ZERO;
-                        frametime_queue.clear();
-                    }
-                });
+                frametime.draw_frametime_info(ui);
 
                 // Draw UI
                 draw_renderer_editor(ui, &mut uniforms);
@@ -223,15 +187,7 @@ fn main() {
                 // Finish frame
                 frame.finish().unwrap();
 
-                let end_rendering = std::time::Instant::now();
-                let frame_time = end_rendering - start_rendering;
-
-                last_frame = Some(frame_time);
-                frametime_queue.push_back(last_frame.unwrap());
-
-                if frametime_queue.len() > frametime_queue_max_length {
-                    frametime_queue.pop_front();
-                }
+                frametime.update();
 
                 imgui_data.imgui_renderer.textures().remove(tex_id);
 
