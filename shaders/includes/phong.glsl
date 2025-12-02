@@ -1,7 +1,7 @@
 subroutine ( shade ) vec3 phong(Ray ray, HitInfo hit) {
     // vec3 lightPos = vec3(1.5, 2.8, 4.0);
-    // vec3(-8.0, 2.0, 0.0),
-    vec3 lightPos = vec3(0.0, 6.0, 0.0);
+    // vec3(-1.0, 0.0, 0.0),
+    vec3 lightPos = vec3(-1.4, 1.0, -4.0);
 
     vec3 lightColor = vec3(1.0);
 

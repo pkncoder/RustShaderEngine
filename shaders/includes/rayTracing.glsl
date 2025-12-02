@@ -5,7 +5,7 @@ HitInfo rayTrace(Ray ray) {
         return sceneHit;
     }
 
-    vec3 lightPos = vec3(0.0, 6.0, 0.0);
+    vec3 lightPos = vec3(-1.4, 1.0, -4.0);
 
     Ray shadowRay = Ray(
             sceneHit.hitPos + sceneHit.normal * EPSILON,

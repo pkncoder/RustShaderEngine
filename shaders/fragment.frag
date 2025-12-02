@@ -88,7 +88,7 @@ void main() {
     //     );
 
     Ray ray = Ray(
-            vec3(-8.0, 2.0, 0.0),
+            vec3(-1.0, 0.0, 0.0),
             normalize(vec3(uv, cameraDist)) * rotateY(90.0)
         );
 

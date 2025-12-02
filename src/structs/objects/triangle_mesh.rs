@@ -111,8 +111,8 @@ impl TriangleMesh {
                     0.0,
                 ];
                 let mut rng = rand::rng();
-                let random_color = rng.random_range(0..8);
-                let data = [2.0, 0.0, 0.0, 6.0];
+                let random_color: f32 = rng.random_range(0..8) as f32;
+                let data = [2.0, 0.0, 0.0, random_color];
 
                 vec.push(Triangle {
                     vert1: v1,

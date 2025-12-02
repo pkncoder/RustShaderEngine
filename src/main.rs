@@ -44,7 +44,7 @@ fn main() {
     imgui_data.imgui_context.io_mut().config_flags |= imgui::ConfigFlags::DOCKING_ENABLE;
 
     let render_data_configuration =
-        RenderDataConfiguration::build("./scenes/sponza.json".to_string());
+        RenderDataConfiguration::build("./scenes/dragon.json".to_string());
 
     let mut render_data = RenderData::build(render_data_configuration);
     /* UNIFORMS */
