@@ -88,8 +88,8 @@ void main() {
     //     );
 
     Ray ray = Ray(
-            vec3(-8.0, 2.0, 0.0),
-            normalize(vec3(uv, cameraDist)) * rotateY(90.0)
+            vec3(-0.2, 0.7, 2.2),
+            normalize(vec3(uv, cameraDist)) * rotateY(180.0)
         );
 
     // TODO: Create a way to set light positions

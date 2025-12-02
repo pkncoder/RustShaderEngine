@@ -1,7 +1,7 @@
 #define PI 3.14159265359
 #define EPSILON 0.0001
 
-#define FOV 90
+#define FOV 60
 
 #define NO_HIT 0
 #define IN_SHADOW 1

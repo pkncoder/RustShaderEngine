@@ -62,7 +62,7 @@ impl UniformData {
             shading_model: 0,
 
             ambient_color: [1.0, 1.0, 1.0],
-            ambient_power: 0.2,
+            ambient_power: 0.17,
 
             object_buffer,
             object_num,
