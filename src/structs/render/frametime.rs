@@ -5,6 +5,8 @@ use std::{
 
 use imgui::Ui;
 
+use crate::structs::opengl::frames::SimpleFrame;
+
 pub struct FrameTime {
     pub frametime: Option<Duration>,
     pub average_frametime: Option<Duration>,
@@ -74,8 +76,9 @@ impl FrameTime {
         self.average_frametime = None;
     }
 
-    pub fn draw_frametime_info(&mut self, ui: &Ui) {
+    pub fn draw_frametime_info(&mut self, ui: &Ui, frame: &SimpleFrame) {
         ui.window("Frametime Status (one behind)").build(|| {
+            ui.text(format!("Render Resolution: ({}, {})", frame.fbo_width, frame.fbo_height));
             ui.text(format!("Frame Time: {:?}", self.frametime));
             if !self.average_frametime_queue.is_empty() {
                 ui.text(format!("Average Frame Time: {:?}", self.average_frametime));

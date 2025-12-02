@@ -4,6 +4,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::structs::objects::triangle::Triangle;
 
+use rand::Rng;
+
 // TODO: Figure out if I want asset_name or asset_file_name or something else
 
 #[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
@@ -108,8 +110,8 @@ impl TriangleMesh {
                     mesh.positions[i3 * 3 + 2],
                     0.0,
                 ];
-                // let mut rng = rand::rng();
-                // let random_color = rng.random_range(0..8);
+                let mut rng = rand::rng();
+                let random_color = rng.random_range(0..8);
                 let data = [2.0, 0.0, 0.0, 6.0];
 
                 vec.push(Triangle {

@@ -82,15 +82,15 @@ void main() {
     uv.y *= -1.0; // TODO : Anyway to not with the texture?
     float cameraDist = 1.0f / tan(FOV * 0.5f * PI / 180.0f);
 
-    Ray ray = Ray(
-            -vec3(0.0, 0.0, 8.0) * rotate(time / 100.0) + vec3(0.0, 1.0, 0.0),
-            normalize(vec3(uv, cameraDist)) * rotateX(-7.0) * rotate(time / 100.0)
-        );
-
     // Ray ray = Ray(
-    //         vec3(0.0, 0.0, -8.0),
-    //         normalize(vec3(uv, cameraDist))
+    //         -vec3(0.0, 0.0, 0.0) * rotate(time / 100.0) + vec3(0.0, 20.0, 30.0),
+    //         normalize(vec3(uv, cameraDist)) * rotateX(-10.0) * rotate(time / 100.0)
     //     );
+
+    Ray ray = Ray(
+            vec3(-8.0, 2.0, 0.0),
+            normalize(vec3(uv, cameraDist)) * rotateY(90.0)
+        );
 
     // TODO: Create a way to set light positions
     HitInfo hit = rayTrace(ray);

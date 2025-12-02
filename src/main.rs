@@ -44,7 +44,7 @@ fn main() {
     imgui_data.imgui_context.io_mut().config_flags |= imgui::ConfigFlags::DOCKING_ENABLE;
 
     let render_data_configuration =
-        RenderDataConfiguration::build("./scenes/ico_sphere.json".to_string());
+        RenderDataConfiguration::build("./scenes/sponza.json".to_string());
 
     let mut render_data = RenderData::build(render_data_configuration);
     /* UNIFORMS */
@@ -89,7 +89,7 @@ fn main() {
                 let ui = imgui_data.imgui_context.frame();
                 ui.dockspace_over_main_viewport();
 
-                frametime.draw_frametime_info(ui);
+                frametime.draw_frametime_info(ui, &opengl_data.frame);
 
                 // Draw UI
                 draw_renderer_editor(ui, &mut uniforms);
