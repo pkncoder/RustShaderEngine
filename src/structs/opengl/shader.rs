@@ -4,8 +4,8 @@ use glium::Program;
 
 use glsl_include::Context;
 
-use glium::backend::glutin::glutin::surface::WindowSurface;
 use glium::backend::glutin::Display;
+use glium::backend::glutin::glutin::surface::WindowSurface;
 
 pub struct Shader {
     pub program: Program,
@@ -24,11 +24,9 @@ impl Shader {
             .expect("Should have been able to read the file");
 
         let mut final_fragment_shader = fragment_shader.clone();
-        if includes_directory.is_some() {
-            final_fragment_shader = Self::expand_shader_with_includes(
-                &fragment_shader,
-                includes_directory.expect("Error in unwrapping include directory string."),
-            );
+        if let Some(includes_unwraped_directory) = includes_directory {
+            final_fragment_shader =
+                Self::expand_shader_with_includes(&fragment_shader, includes_unwraped_directory);
         }
 
         Shader {

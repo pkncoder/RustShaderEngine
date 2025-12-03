@@ -1,8 +1,8 @@
 use glium::{
+    Display,
     program::ShaderStage,
     texture::buffer_texture::{BufferTexture, BufferTextureType},
     uniforms::Uniforms,
-    Display,
 };
 use glutin::surface::WindowSurface;
 
@@ -73,6 +73,9 @@ impl UniformData {
     }
 
     pub fn get_uniforms(&self) -> impl Uniforms + '_ {
+        println!("Uniform pre");
+        println!("Frame num: {}", self.frame_num);
+
         let uniforms = uniform! {
             iResolution: self.screen_resolution,
             ambient: [self.ambient_color[0], self.ambient_color[1], self.ambient_color[2], self.ambient_power],
@@ -87,6 +90,8 @@ impl UniformData {
             materials: &self.material_buffer,
             materials_length: self.material_num
         };
+
+        println!("Uniform post");
 
         uniforms
     }
