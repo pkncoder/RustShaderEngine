@@ -2,12 +2,12 @@
 extern crate glium;
 
 use glium::{
+    Surface,
     backend::winit::{
         self,
         event::{Event, WindowEvent},
         window::Window,
     },
-    Surface,
 };
 
 mod builders;
@@ -44,7 +44,7 @@ fn main() {
     imgui_data.imgui_context.io_mut().config_flags |= imgui::ConfigFlags::DOCKING_ENABLE;
 
     let render_data_configuration =
-        RenderDataConfiguration::build("./scenes/ico_sphere.json".to_string());
+        RenderDataConfiguration::build("./scenes/sphere.json".to_string());
 
     let mut render_data = RenderData::build(render_data_configuration);
     /* UNIFORMS */
