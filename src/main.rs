@@ -177,6 +177,8 @@ fn main() {
 
                 style_1.pop();
 
+                println!("Pre rendered imgui");
+
                 // Render imgui overlay
                 opengl_data.frame.render_imgui(
                     &mut imgui_data.imgui_context,
@@ -184,8 +186,12 @@ fn main() {
                     &mut frame,
                 );
 
+                println!("Post frendered imgui\nPre finished frame");
+
                 // Finish frame
                 frame.finish().unwrap();
+
+                println!("Post finished frame");
 
                 frametime.update();
 

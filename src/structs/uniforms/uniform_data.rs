@@ -37,7 +37,11 @@ impl UniformData {
 
         let object_buffer = BufferTexture::new(
             display,
-            &render_data.scene_block.object_block.get_object_vec(),
+            &render_data
+                .scene_block
+                .object_block
+                .get_object_vec()
+                .clone(),
             BufferTextureType::Float,
         )
         .unwrap();
@@ -46,7 +50,11 @@ impl UniformData {
 
         let material_buffer = BufferTexture::new(
             display,
-            &render_data.scene_block.material_block.get_material_vec(),
+            &render_data
+                .scene_block
+                .material_block
+                .get_material_vec()
+                .clone(),
             BufferTextureType::Float,
         )
         .unwrap();
