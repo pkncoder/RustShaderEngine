@@ -1,7 +1,7 @@
 use glium::{
+    Display,
     backend::glutin::SimpleWindowBuilder,
     winit::{event_loop::EventLoop, window::Window},
-    Display,
 };
 use glutin::surface::WindowSurface;
 

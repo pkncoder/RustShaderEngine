@@ -35,6 +35,7 @@ impl UniformData {
     pub fn build(display: &Display<WindowSurface>, render_data: &mut RenderData) -> UniformData {
         let (width, height) = display.get_framebuffer_dimensions();
 
+        println!("Building!");
         let object_buffer = BufferTexture::new(
             display,
             &render_data
